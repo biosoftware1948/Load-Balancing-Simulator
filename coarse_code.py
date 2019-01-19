@@ -2,15 +2,18 @@
 #basically, this is pseudocode using python logic
 
 from collections import deque
+from itertools import count
 
 #Computer (worker node, created by the node generator)
 ##Pre-cond: its qualities (Power, memory)
 ##Post-cond: a complete node which can receive workload units and complete them, logging stats as it goes
 Class ComputeNode:
-  self.tasks = list() #this gets filled by the balancer
+  _ids = count(0)
   def __init__(self,cpu,mem):
+    self.id = next(self._ids)
     self.cpu = cpu #think of this like "power" more than actual CPU cycles/time
     self.mem = mem
+    self.tasks = list() #this gets filled by the balancer
   def compute():
     #if tasks is empty, report whole cycle wasted and exit
     task = self.tasks.pop();
@@ -77,6 +80,6 @@ def core_sim(length,node_params,work_params,alg):
     for x in balancer.nodes:
       x.compute();
   
-  #cleanup
+  #cleanup & report: 
   #end
     
