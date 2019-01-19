@@ -49,7 +49,7 @@ Class WorkloadGen:
     #need to add a check for good formatting
     self.parameters = parameters
   
-  def generate(): #make some work(s)
+  def generate(): #make some work(s), call Balancer.recieve()
   
 #Balancer (algorithm implementor)
 ##Pre-cond: workload generator’s output stream, computer holding object’s input stream, algorithm
