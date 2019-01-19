@@ -13,7 +13,7 @@ Class ComputeNode:
     self.id = next(self._ids)
     self.cpu = cpu #think of this like "power" more than actual CPU cycles/time
     self.mem = mem
-    self.tasks = list() #this gets filled by the balancer
+    self.tasks = list() #this gets filled by the balancer, can only hold up to the size of its memory in "length"
   def compute():
     #if tasks is empty, report whole cycle wasted and exit
     task = self.tasks.pop();
@@ -36,10 +36,10 @@ Class NodeGen:
 ##Pre-cond: job qualities
 ##Post-cond: object that defines a workload
 Class Work:
-  def __init__(self,diff,length): #"difficulty" being fraction of 1 time period (turn) to compute 1 unit of length
-    self.diff = diff
+  def __init__(self,diff,length,attributes): #"difficulty" being fraction of 1 time period (turn) to compute 1 unit of length on a node with a CPU value of 1
+    self.diff = diff #random within a range, not known by the balancer
     self.length = length
-    
+    self.attr = attributes #things like "importance" or "assumed difficulty" go here, to be passed to the algorithm relevant to them
     
 #WorkloadGen (generates work)
 ##Pre-cond: parameter sets
