@@ -7,6 +7,8 @@ Class ComputeNode:
   def __init__(self,cpu,mem):
     self.cpu = cpu #"power" more than actual CPU cycles/time
     self.mem = mem
+  def compute():
+    
   
 #Computer holding class (bag of computers with creation/management funcs)
 ##Pre-cond: parameters of a number of computers and their qualities
@@ -17,6 +19,7 @@ Class NodeGen:
     self.nodes = set();
     for i in range(number):
       nodes = nodes | ComputeNode(qualities(i).cpu,qualities(i).mem) #I made this a bag but that can obvs change
+      
     
 #Workload (work, stores the qualities of a job a computer will have to do)
 ##Pre-cond: job qualities
@@ -35,14 +38,29 @@ Class WorkloadGen:
     #need to add a check for good formatting
     self.parameters = parameters
   
+  def generate(): #make some work(s)
+  
 #Balancer (algorithm implementor)
 ##Pre-cond: workload generator’s output stream, computer holding object’s input stream, algorithm
 ##Post-cond: object which runs every turn to allocate work to worker computers, logs actions
 Class Balancer:
-  def __init__(self,workgen,nodebag,algorithm) #the alg gets passed in here
+  def __init__(self,workgen,nodegen,algorithm) #the alg gets passed in here
     self.workgen = workgen
     self.nodes = list()
-    for x in nodebag:
+    for x in nodegen.nodes:
       self.nodes = self.nodes + x
     self.alg = algorithm
+    
+def core_sim(length,node_params,work_params,alg): 
+  #initialize logfile here
+  
+  node_gen = NodeGen(node_params.num,node_params.qualities)
+  #node_gen generates the nodes as it self-constructs
+  work_gen = WorkloadGen(work_params)
+  balancer = Balancer(node_gen,work_gen,alg)
+  
+  #loop though the simulation
+  for turn in range(length):
+    work_gen.generate()
+    
     
