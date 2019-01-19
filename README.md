@@ -31,7 +31,7 @@
 ##Post-cond: work objects produced over the simulation period at </br>
 #Computer holding class (bag of computers with creation/management funcs) </br>
 ##Pre-cond: parameters of a number of computers and their qualities</br>
-##Post-cond: the computer holding object which contains the specified computers, and a log message</br></br>
+##Post-cond: the computer holding object which contains the specified computers, and a log message</br>
 
 #   Roughest pseudocode:</br>
 #PARSE/GEN PARAMETERS</br>
@@ -39,7 +39,7 @@
 ##GENERATE WORKER BAG</br>
 ##GENERATE WORKERS</br>
 ##GENERATE WORKLOADGEN</br>
-##GENERATE BALANCER</br></br>
+##GENERATE BALANCER</br>
 #    
 ##TURN LOOP</br>
 ###WORKLOADGEN OBJECT INVOKED, GENERATES WORK, SENDS TO BALANCER</br>
