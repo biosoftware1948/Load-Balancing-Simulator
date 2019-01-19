@@ -1,5 +1,5 @@
 #these are as much intended to flesh out ideas as be the basis for future functional code
-#basic 
+#basically, this is pseudocode using python logic
 
 from collections import deque
 
