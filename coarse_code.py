@@ -9,12 +9,13 @@ from collections import deque
 Class ComputeNode:
   self.tasks = list() #this gets filled by the balancer
   def __init__(self,cpu,mem):
-    self.cpu = cpu #"power" more than actual CPU cycles/time
+    self.cpu = cpu #think of this like "power" more than actual CPU cycles/time
     self.mem = mem
   def compute():
+    #if tasks is empty, report whole cycle wasted and exit
     task = self.tasks.pop();
     #do as much of task as possible
-    #push task back onto top of list if unfinished
+    #push task back onto top of list if unfinished, else delete
     #record fraction of cycle spent idle
   
 #Computer holding class (bag of computers with creation/management funcs)
