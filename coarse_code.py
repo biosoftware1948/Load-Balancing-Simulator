@@ -61,8 +61,11 @@ Class Balancer:
     for x in nodegen.nodes:
       self.nodes = self.nodes + x
     self.alg = algorithm
-  def recieve(): #called by the workload generator
+    self.tasks = list()
+  def recieve(task): #called by the workload generator
+    tasks += task
   def distribute(): #distibute the workload in accordance to the algorithm
+    algorithm(nodes,tasks)
   
   
 def core_sim(length,node_params,work_params,alg): 
