@@ -1,4 +1,5 @@
 #these are as much intended to flesh out ideas as be the basis for future functional code
+#basic 
 
 from collections import deque
 
@@ -11,10 +12,10 @@ Class ComputeNode:
     self.cpu = cpu #"power" more than actual CPU cycles/time
     self.mem = mem
   def compute():
-    time = 1.0
     task = self.tasks.pop();
-    while(time > 0):
-      
+    #do as much of task as possible
+    #push task back onto top of list if unfinished
+    #record fraction of cycle spent idle
   
 #Computer holding class (bag of computers with creation/management funcs)
 ##Pre-cond: parameters of a number of computers and their qualities
@@ -71,5 +72,10 @@ def core_sim(length,node_params,work_params,alg):
   #loop though the simulation
   for turn in range(length):
     work_gen.generate()
-    
+    balancer.distribute()
+    for x in balancer.nodes:
+      x.compute();
+  
+  #cleanup
+  #end
     
