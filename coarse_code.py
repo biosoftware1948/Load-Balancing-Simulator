@@ -1,14 +1,20 @@
 #these are as much intended to flesh out ideas as be the basis for future functional code
 
+from collections import deque
+
 #Computer (worker node, created by the node generator)
 ##Pre-cond: its qualities (Power, memory)
 ##Post-cond: a complete node which can receive workload units and complete them, logging stats as it goes
 Class ComputeNode:
+  self.tasks = list() #this gets filled by the balancer
   def __init__(self,cpu,mem):
     self.cpu = cpu #"power" more than actual CPU cycles/time
     self.mem = mem
   def compute():
-    
+    time = 1.0
+    task = self.tasks.pop();
+    while(time > 0):
+      
   
 #Computer holding class (bag of computers with creation/management funcs)
 ##Pre-cond: parameters of a number of computers and their qualities
@@ -50,7 +56,10 @@ Class Balancer:
     for x in nodegen.nodes:
       self.nodes = self.nodes + x
     self.alg = algorithm
-    
+  def recieve(): #called by the workload generator
+  def distribute(): #distibute the workload in accordance to the algorithm
+  
+  
 def core_sim(length,node_params,work_params,alg): 
   #initialize logfile here
   
