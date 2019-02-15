@@ -5,7 +5,14 @@ class LoadBalancer(object):
         self.__output_interface_count = output_interface_count
         self.__JOB_QUEUE = Queue()
         self.__output_interfaces = [] #list of computing nodes, indexed
-
+        self.__algorithm = lambda a,b: print("No algorithm, fail")
+        
+    def __init__(self, output_interface_count,algorithm):
+        self.__output_interface_count = output_interface_count
+        self.__JOB_QUEUE = Queue()
+        self.__output_interfaces = [] #list of computing nodes, indexed
+        self.__algorithm = algorithm
+        
     def add_job(self, job):
         self.__JOB_QUEUE.enqueue(job)
 
@@ -23,6 +30,9 @@ class LoadBalancer(object):
 
     def assign_job(node_index):
         self.__output_interfaces[node_index].assign_job
+        
+    def invoke_algorithm():
+        self.__algorithm(self.__JOB_QUEUE,self.__output_interfaces)
 
     @abc.abstractmethod
     def run_load_balancing(load_balancing_algorithm):
