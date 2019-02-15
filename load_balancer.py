@@ -30,6 +30,9 @@ class LoadBalancer(object):
 
     def assign_job(node_index):
         self.__output_interfaces[node_index].assign_job
+        
+    def invoke_algorithm():
+        self.__algorithm(self.__JOB_QUEUE,self.__output_interfaces)
 
     @abc.abstractmethod
     def choose_next_node():
