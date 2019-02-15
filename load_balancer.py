@@ -25,7 +25,7 @@ class LoadBalancer(object):
         self.__output_interfaces[node_index].assign_job
 
     @abc.abstractmethod
-    def choose_next_node():
+    def run_load_balancing(load_balancing_algorithm):
         pass
 
 class Queue(object):

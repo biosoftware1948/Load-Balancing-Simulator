@@ -8,16 +8,26 @@ class job(object):
         self.gpu_runtime = gpu_runtime
 
 
-def jobFactory(num_jobs, runtime_ceil=100, mem_reqs_ceil=100, runtime_seed=0, mem_seed=0, arrival_time_seed = 0):
-    Jobs = []
-    
-    random.seed(seed)
-    for i in range(0, num_jobs):
-        runtime = random.randint(1, runtime_ciel)
-        memory = random.randint(1, mem_reqs_ceil)
-        arrival_time = random.randint(1, arrival_time_seed)
-        j = Job(runtime, arrival_time, memory)
-        Jobs.append(j)
+class Jobs(object):
+    def __init__():
+        self.jobs = []
 
-    return Jobs
+    def sortByArrival():
+        self.jobs.sort(lambda x: x.arrival_time)
+
+    def sortByRuntime():
+        self.jobs.sort(lambda x: x.runtime)
+
+    def sortByMem():
+        self.jobs.sort(lambda x: x.mem_reqs)
+
+    def createJobs(self, num_jobs, runtime_ceil=100, mem_reqs_ceil=100, runtime_seed=0, mem_seed=0, arrival_time_seed = 0):
+        random.seed(seed)
+        for i in range(0, num_jobs):
+            runtime = random.randint(1, runtime_ciel)
+            memory = random.randint(1, mem_reqs_ceil)
+            arrival_time = random.randint(1, arrival_time_seed)
+            j = Job(runtime, arrival_time, memory)
+            self.append(j)
+
     
