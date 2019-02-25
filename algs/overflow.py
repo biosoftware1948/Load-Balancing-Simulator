@@ -19,7 +19,7 @@ class OverflowLoadBalancer(LoadBalancer):
           attr = false
         
         
-        if !attr:
+        if not attr:
           while (True):
             for cur_node in cluster.nodes
               if cur_node.state == 1:
