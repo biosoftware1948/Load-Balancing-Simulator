@@ -34,6 +34,7 @@ class LoadBalancer(object):
 
     @abc.abstractmethod
     def run_load_balancing():
+        #This should distribute all the jobs in the job_queue until its empty
         pass
 
 class RandomLoadBalancer(LoadBalancer):
