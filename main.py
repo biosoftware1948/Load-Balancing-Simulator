@@ -20,7 +20,12 @@ def run_sim(load_balancer, cluster, jobs):
             #Add jobs to load balancer as they come in
             load_balancer.add_job(job_queue.dequeue())
             #Distribute those jobs now
+            #Use below to start testing algos
             #load_balancer.run_load_balancing()
+
+            #We are gonna need to gather statistics about how the algos performed as well
+            #also the algos need to be able to handle busy nodes in the cluster and wait
+            #as necessary
 
 
 if __name__ == "__main__":
