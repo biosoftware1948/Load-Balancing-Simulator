@@ -18,9 +18,10 @@ class DeviceHardware(object):
         self.__mem = mem
 
 class ComputeNode(object):
-    def __init__(self, device_hardware):
+    def __init__(self, device_hardware, attributes = None):
         self.state = DeviceState.FREE
         self.device_hardware = device_hardware
+        self.attributes = attributes
         
     def assign_job(self):
         self.state = DeviceState.BUSY
