@@ -1,19 +1,19 @@
 class OverflowLoadBalancer(LoadBalancer):
     def run_load_balancing():
         if not cluster.nodes:
-          print("OverflowLoadBalancer(): faulure, no cluster")
+          print("OverflowLoadBalancer(): failure, no cluster")
           os.flush()
           return true
         if not cluster.nodes[0]:
-          print("OverflowLoadBalancer(): faulure, no nodes")
+          print("OverflowLoadBalancer(): failure, no nodes")
           os.flush()
           return true
         if not cluster.nodes[0].attributes:
-          print("OverflowLoadBalancer(): faulure, no attributes")
+          print("OverflowLoadBalancer(): failure, no attributes")
           os.flush()
           return true
         if not cluster.nodes[0].attributes.priority:
-          print("OverflowLoadBalancer(): faulure, no priority attributes")
+          print("OverflowLoadBalancer(): failure, no priority attributes")
           os.flush()
           return true
         
