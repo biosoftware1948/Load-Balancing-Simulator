@@ -13,15 +13,15 @@ class Jobs(object):
         self.jobs = []
 
     def sortByArrival(self):
-        self.jobs.sort(lambda x: x.arrival_time)
+        self.jobs.sort(key=lambda x: x.arrival_time)
 
     def sortByRuntime(self):
-        self.jobs.sort(lambda x: x.runtime)
+        self.jobs.sort(key=lambda x: x.runtime)
 
     def sortByMem(self):
-        self.jobs.sort(lambda x: x.mem_reqs)
+        self.jobs.sort(key=lambda x: x.mem_reqs)
 
-    def createJobs(self, num_jobs, runtime_ceil=100, mem_reqs_ceil=100, arrival_time_ciel=100,runtime_seed=0, mem_seed=0, arrival_time_seed = 0):
+    def createJobs(self, num_jobs, arrival_time_ciel=100, runtime_ceil=100, mem_reqs_ceil=100,runtime_seed=0, mem_seed=0, arrival_time_seed = 0):
         random.seed(0)
         for i in range(0, num_jobs):
             runtime = random.randint(1, runtime_ceil)

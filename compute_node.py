@@ -44,7 +44,7 @@ class Cluster(object):
                 self.nodes.append(c)
 
         else:
-            #TODO Random jobs generator
+            #TODO READ FROM JSON FILE FOR ALL THE NODES
             pass
 
 
