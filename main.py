@@ -29,11 +29,9 @@ def run_sim(load_balancer, cluster, jobs):
             #also the algos need to be able to handle busy nodes in the cluster and wait
             #as necessary
 
-
 if __name__ == "__main__":
     jobs = workload.Jobs()
     jobs.createJobs(NUM_JOBS, SIM_RUNTIME)
-    #jobs.sortByArrival()
 
     cluster = compute_node.Cluster(NUM_NODES, False) 
     
@@ -42,8 +40,8 @@ if __name__ == "__main__":
     for job in jobs.jobs:
         print ("job arrived at time: {0}, has cpu_load: {1}, mem_requirements: {2}".format(job.arrival_time, job.runtime, job.mem_reqs))
    
-
     print ("\n\nPRINTING NODES:")
+
     for i, node in enumerate(cluster.nodes):
         print ("Node {0} has state {1}".format(i, node.state))
 

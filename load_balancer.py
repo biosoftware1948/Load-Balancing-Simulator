@@ -1,7 +1,11 @@
 import abc
 
+<<<<<<< HEAD
 
 class LoadBalancer:
+=======
+class LoadBalancer(object):
+>>>>>>> 20a5f9224347a5e11f288462c11fbbc143a3f8f7
     def __init__(self, output_interface_count):
         self.__output_interface_count = output_interface_count
         self.__JOB_QUEUE = Queue()
@@ -28,7 +32,7 @@ class LoadBalancer:
 
     def assign_cluster(self, cluster):
         self.__output_interfaces = cluster.nodes
-        
+                
     def invoke_algorithm():
         self.__algorithm(self.__JOB_QUEUE,self.__output_interfaces)
 
@@ -46,7 +50,6 @@ class RandomLoadBalancer(LoadBalancer):
                 # assign_job makes the node state = busy, but what is keeping track of how long its busy for?
                 # every job has a cycle number, but how will node be aware of that
                 break
-
 
 class Queue(object):
     def __init__(self):
