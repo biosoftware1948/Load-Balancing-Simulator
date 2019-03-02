@@ -1,7 +1,7 @@
 import abc
 
 
-class LoadBalancer(object):
+class LoadBalancer:
     def __init__(self, output_interface_count):
         self.__output_interface_count = output_interface_count
         self.__JOB_QUEUE = Queue()
@@ -32,15 +32,15 @@ class LoadBalancer(object):
     def invoke_algorithm():
         self.__algorithm(self.__JOB_QUEUE,self.__output_interfaces)
 
-    @abc.abstractmethod
-    def run_load_balancing():
+    #@abc.abstractmethod
+    def run_load_balancing(self):
         #This should distribute all the jobs in the job_queue until its empty
         pass
 
 class RandomLoadBalancer(LoadBalancer):
-    def run_load_balancing():
+    def run_load_balancing(self):
         while (True):
-            cur_node = cluster.nodes[randint(0,cluster.node_count-1)]
+            cur_node = self.__output_interfaces[randint(0,cluster.node_count-1)]
             if cur_node.state == 1:
                 cur_node.assign_job()
                 # assign_job makes the node state = busy, but what is keeping track of how long its busy for?

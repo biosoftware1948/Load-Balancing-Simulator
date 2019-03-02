@@ -1,6 +1,8 @@
 from enum import Enum
+import random
 
 DEFAULT_CPU = 1
+DEFAULT_CPU_FLOOR = 1
 DEFAULT_MAX_CPU = 6
 
 DEFAULT_MEM = 100
@@ -14,7 +16,7 @@ class DeviceState(Enum):
 
 class DeviceHardware(object):
     def __init__(self, cpu, mem):
-        self.__cpu = cpu
+        self.cpu = cpu
         self.__mem = mem
 
 class ComputeNode(object):
@@ -41,11 +43,18 @@ class Cluster(object):
         if self.homogenous:
             for i in range(0, self.node_count):
                 d = DeviceHardware(DEFAULT_CPU, DEFAULT_MEM)
-                c = ComputeNode(DeviceHardware)
+                c = ComputeNode(d)
                 self.nodes.append(c)
 
         else:
             #TODO READ FROM JSON FILE FOR ALL THE NODES
+            #for now, do random values
+            for i in range(0, self.node_count):
+                cpu = random.randint(DEFAULT_CPU_FLOOR, DEFAULT_MAX_CPU)
+                mem = random.randint(DEFAULT_MEM_FLOOR, DEFAULT_MEM_CIEL)
+                d = DeviceHardware(cpu, mem)
+                c = ComputeNode(d)
+                self.nodes.append(c)
             pass
 
 

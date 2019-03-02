@@ -1,6 +1,8 @@
 import load_balancer
 import compute_node
 import workload
+from wrr import WRRBalancer
+#import algs.overflow
 
 from load_balancer import Queue
 
@@ -21,7 +23,7 @@ def run_sim(load_balancer, cluster, jobs):
             load_balancer.add_job(job_queue.dequeue())
             #Distribute those jobs now
             #Use below to start testing algos
-            #load_balancer.run_load_balancing()
+            load_balancer.run_load_balancing()
 
             #We are gonna need to gather statistics about how the algos performed as well
             #also the algos need to be able to handle busy nodes in the cluster and wait
@@ -33,18 +35,22 @@ if __name__ == "__main__":
     jobs.createJobs(NUM_JOBS, SIM_RUNTIME)
     #jobs.sortByArrival()
 
-    cluster = compute_node.Cluster(NUM_NODES) 
+    cluster = compute_node.Cluster(NUM_NODES, False) 
     
-    print "PRINTING JOBS"
+    print ("PRINTING JOBS")
     jobs.sortByArrival()
     for job in jobs.jobs:
-        print "job arrived at time: {0}, has cpu_load: {1}, mem_requirements: {2}".format(job.arrival_time, job.runtime, job.mem_reqs)
+        print ("job arrived at time: {0}, has cpu_load: {1}, mem_requirements: {2}".format(job.arrival_time, job.runtime, job.mem_reqs))
    
 
-    print "\n\nPRINTING NODES:"
+    print ("\n\nPRINTING NODES:")
     for i, node in enumerate(cluster.nodes):
-        print "Node {0} has state {1}".format(i, node.state)
+        print ("Node {0} has state {1}".format(i, node.state))
 
-    run_sim(load_balancer.RandomLoadBalancer(NUM_NODES), cluster, jobs)
+    #run_sim(load_balancer.LoadBalancer(NUM_NODES), cluster, jobs)
+    #run_sim(load_balancer.RandomLoadBalancer(NUM_NODES), cluster, jobs)
+    run_sim(WRRBalancer(NUM_NODES), cluster, jobs)
+    #run_sim(OverflowLoadBalancer(NUM_NODES), cluster, jobs)
+
     
 

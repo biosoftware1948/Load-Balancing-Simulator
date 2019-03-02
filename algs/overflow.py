@@ -21,7 +21,7 @@ class OverflowLoadBalancer(LoadBalancer):
         
         if not attr:
           while (True):
-            for cur_node in cluster.nodes
+            for cur_node in cluster.nodes:
               if cur_node.state == 1:
                 cur_node.assign_job()
                 # assign_job makes the node state = busy, but what is keeping track of how long its busy for?
@@ -29,7 +29,7 @@ class OverflowLoadBalancer(LoadBalancer):
                 break
         else:
           while (True):
-            for cur_node in sorted(cluster.nodes, key = attributes.priority)
+            for cur_node in sorted(cluster.nodes, key = attributes.priority):
                if cur_node.state == 1:
                 cur_node.assign_job()
                 # assign_job makes the node state = busy, but what is keeping track of how long its busy for?
