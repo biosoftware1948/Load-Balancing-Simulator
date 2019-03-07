@@ -2,6 +2,8 @@
 #it chooses a node based off a hash of the client and destination
 #this results in every server-client pair being assigned to the same node every time it generates a workload
 #the point is persistence, but all that massters to us is that this is effectively an alg that can be "worse than random" for us to compare to
+
+#optionally uses a job attribute called source_dest which is effectively a hash key
 class OverflowLoadBalancer(LoadBalancer):
     def run_load_balancing():
         attr = true
@@ -24,18 +26,13 @@ class OverflowLoadBalancer(LoadBalancer):
         
         
         if not attr:
+          while not load_balancer.__JOB_QUEUE.enpty(): #just modulo the job IDs onto the node IDs
+            
+        else:
           while (True):
-            for cur_node in cluster.nodes
-              if cur_node.state == 1:
-                cur_node.assign_job()
+            for cur_node in sorted(cluster.nodes, key = attributes.source_dest)
+               if cur_node.state == 1:
+                cur_node.assign_job(load_balancer.get_next_job())
                 # assign_job makes the node state = busy, but what is keeping track of how long its busy for?
                 # every job has a cycle number, but how will node be aware of that
                 break
-        else:
-          while (True):
-            for cur_node in sorted(cluster.nodes, key = attributes.priority)
-               if cur_node.state == 1:
-                cur_node.assign_job()
-                # assign_job makes the node state = busy, but what is keeping track of how long its busy for?
-                # every job has a cycle number, but how will node be aware of that
-break
