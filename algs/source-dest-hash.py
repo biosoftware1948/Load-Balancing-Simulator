@@ -4,36 +4,33 @@
 #the point is persistence, but all that massters to us is that this is effectively an alg that can be "worse than random" for us to compare to
 
 #optionally uses a job attribute called source_dest which is effectively a hash key
-class OverflowLoadBalancer(LoadBalancer):
+class S_D_HashLoadBalancer(LoadBalancer):
     def run_load_balancing():
         attr = true
         if not cluster:
-          print("OverflowLoadBalancer(): failure, no cluster")
+          print("S_D_HashLoadBalancer(): failure, no cluster")
           os.flush()
           return true
         if not cluster.nodes:
-          print("OverflowLoadBalancer(): failure, no nodes")
+          print("S_D_HashLoadBalancer(): failure, no nodes")
           os.flush()
           return true
         if not cluster.nodes[0].attributes:
-          print("OverflowLoadBalancer(): failure, no attributes, using job number as source-dest")
+          print("S_D_HashLoadBalancer(): failure, no attributes, using job number as source-dest (this is not worth doing)")
           os.flush()
           attr = false
         if not cluster.nodes[0].attributes.source_dest:
-          print("OverflowLoadBalancer(): failure, no source-dest attributes, using job number as source-dest")
+          print("S_D_HashLoadBalancer(): failure, no source-dest attributes, using job number as source-dest (this is not worth doing)")
           os.flush()
           attr = false
         
         
         if not attr:
-          i = 0
-          while not load_balancer.__JOB_QUEUE.empty(): #just modulo the job IDs onto the node IDs
-            cluster.nodes[i % cluster.node_count].assign_job(load_balancer.__JOB_QUEUE.get())
+          while not load_balancer.__JOB_QUEUE.empty(): #just modulo the job object IDs onto the node IDs
+            j = load_balancer.get_next_job()
+            cluster.nodes[id(j) % cluster.node_count].assign_job(j)
         else:
-          while (True):
-            for cur_node in sorted(cluster.nodes, key = attributes.source_dest)
-               if cur_node.state == 1:
-                cur_node.assign_job(load_balancer.get_next_job())
-                # assign_job makes the node state = busy, but what is keeping track of how long its busy for?
-                # every job has a cycle number, but how will node be aware of that
-                break
+          i = 0
+          while not load_balancer.__JOB_QUEUE.empty(): #just modulo the job source_dest attributes onto the node IDs
+            j = load_balancer.get_next_job()
+            cluster.nodes[j.attributes.source_dest % cluster.node_count].assign_job(j)
