@@ -1,0 +1,4 @@
+#this is an alg used when persistence across dropped sesions is necessary
+#it chooses a node based off a hash of the client and destination
+#this results in every server-client pair being assigned to the same node every time it generates a workload
+#the point is persistence, but all that massters to us is that this is effectively an alg that can be "worse than random" for us to compare to
