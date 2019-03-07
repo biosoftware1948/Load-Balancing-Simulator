@@ -14,11 +14,11 @@ class OverflowLoadBalancer(LoadBalancer):
           os.flush()
           return true
         if not cluster.nodes[0].attributes:
-          print("OverflowLoadBalancer(): failure, no attributes, using node order as priority")
+          print("OverflowLoadBalancer(): failure, no attributes, using job number as source-dest")
           os.flush()
           attr = false
-        if not cluster.nodes[0].attributes.priority:
-          print("OverflowLoadBalancer(): failure, no priority attributes, using node order as priority")
+        if not cluster.nodes[0].attributes.source_dest:
+          print("OverflowLoadBalancer(): failure, no source-dest attributes, using job number as source-dest")
           os.flush()
           attr = false
         
