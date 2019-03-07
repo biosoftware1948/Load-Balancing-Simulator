@@ -23,7 +23,7 @@ class OverflowLoadBalancer(LoadBalancer):
           while (True):
             for cur_node in cluster.nodes
               if cur_node.state == 1:
-                cur_node.assign_job()
+                cur_node.assign_job(load_balancer.get_next_job())
                 # assign_job makes the node state = busy, but what is keeping track of how long its busy for?
                 # every job has a cycle number, but how will node be aware of that
                 break
@@ -31,7 +31,7 @@ class OverflowLoadBalancer(LoadBalancer):
           while (True):
             for cur_node in sorted(cluster.nodes, key = attributes.priority)
                if cur_node.state == 1:
-                cur_node.assign_job()
+                cur_node.assign_job(load_balancer.get_next_job())
                 # assign_job makes the node state = busy, but what is keeping track of how long its busy for?
                 # every job has a cycle number, but how will node be aware of that
                 break
