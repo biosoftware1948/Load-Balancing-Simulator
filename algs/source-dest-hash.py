@@ -26,8 +26,9 @@ class OverflowLoadBalancer(LoadBalancer):
         
         
         if not attr:
-          while not load_balancer.__JOB_QUEUE.enpty(): #just modulo the job IDs onto the node IDs
-            
+          i = 0
+          while not load_balancer.__JOB_QUEUE.empty(): #just modulo the job IDs onto the node IDs
+            cluster.nodes[i % cluster.node_count].assign_job(load_balancer.__JOB_QUEUE.get())
         else:
           while (True):
             for cur_node in sorted(cluster.nodes, key = attributes.source_dest)
