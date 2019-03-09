@@ -1,14 +1,14 @@
 import load_balancer
 import compute_node
 import workload
-from wrr import WRRBalancer
+from algs.wrr import WRRBalancer
 from algs.overflow import OverflowLoadBalancer
 
 from load_balancer import Queue
 
-NUM_JOBS = 30#10000
+NUM_JOBS = 300#10000
 SIM_RUNTIME = 1000#1000
-NUM_NODES = 2#10
+NUM_NODES = 4#10
 
 def run_sim(load_balancer, cluster, jobs):
     load_balancer.assign_cluster(cluster)
