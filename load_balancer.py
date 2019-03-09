@@ -1,20 +1,21 @@
 import abc
+import random
 
 class LoadBalancer(object):
     def __init__(self, output_interface_count):
         self.__output_interface_count = output_interface_count
-        self.__JOB_QUEUE = Queue()
-        self.__output_interfaces = [] #list of computing nodes, indexed
+        self.JOB_QUEUE = Queue()
+        self.output_interfaces = [] #list of computing nodes, indexed
         #self.__algorithm = lambda a,b: print("No algorithm, fail")
                 
     def add_job(self, job):
-        self.__JOB_QUEUE.enqueue(job)
+        self.JOB_QUEUE.enqueue(job)
 
     def get_next_job(self):
-        return self.__JOB_QUEUE.dequeue()
+        return self.JOB_QUEUE.dequeue()
 
     def get_job_count(self):
-        return self.__JOB_QUEUE.size()
+        return self.JOB_QUEUE.size()
 
     def add_output_node(self, node):
         self.__output_interfaces.append(node)
@@ -26,10 +27,11 @@ class LoadBalancer(object):
         self.__output_interfaces[node_index].assign_job(job)
 
     def assign_cluster(self, cluster):
+        self.cluster = cluster
         self.__output_interfaces = cluster.nodes
                 
     def invoke_algorithm():
-        self.__algorithm(self.__JOB_QUEUE,self.__output_interfaces)
+        self.__algorithm(self.JOB_QUEUE,self.__output_interfaces)
 
     #@abc.abstractmethod
     def run_load_balancing(self):
@@ -38,13 +40,17 @@ class LoadBalancer(object):
 
 class RandomLoadBalancer(LoadBalancer):
     def run_load_balancing(self):
-        while (True):
-            cur_node = self.__output_interfaces[randint(0,cluster.node_count-1)]
-            if cur_node.state == 1:
-                cur_node.assign_job()
-                # assign_job makes the node state = busy, but what is keeping track of how long its busy for?
-                # every job has a cycle number, but how will node be aware of that
-                break
+        #while (True):
+        index = random.randint(0, self.cluster.get_num_nodes()-1)
+        if (not self.JOB_QUEUE.isEmpty()):       
+            job = self.get_next_job()
+            self.assign_job(index, job)
+            #cur_node = self.cluster.get_node(index)
+            # if cur_node.state == 1:
+            #     cur_node.assign_job()
+            #     # assign_job makes the node state = busy, but what is keeping track of how long its busy for?
+            #     # every job has a cycle number, but how will node be aware of that
+            #     break
 
 class Queue(object):
     def __init__(self):
