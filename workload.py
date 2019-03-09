@@ -7,6 +7,9 @@ class job(object):
         self.mem_reqs = mem_reqs
         self.gpu_runtime = gpu_runtime
 
+    def __str__(self):
+        return "Job: runtime = "+str(self.runtime)+", arrived: "+str(self.arrival_time)+", mem: " +str(self.mem_reqs) + "gpu "+str(self.gpu_runtime)
+
 
 class Jobs(object):
     def __init__(self):

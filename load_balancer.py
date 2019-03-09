@@ -1,11 +1,6 @@
 import abc
 
-<<<<<<< HEAD
-
-class LoadBalancer:
-=======
 class LoadBalancer(object):
->>>>>>> 20a5f9224347a5e11f288462c11fbbc143a3f8f7
     def __init__(self, output_interface_count):
         self.__output_interface_count = output_interface_count
         self.__JOB_QUEUE = Queue()
@@ -27,8 +22,8 @@ class LoadBalancer(object):
     def get_output_node(self, node_index):
         return self.__output_interfaces[node_index]
 
-    def assign_job(node_index):
-        self.__output_interfaces[node_index].assign_job
+    def assign_job(self, node_index, job):
+        self.__output_interfaces[node_index].assign_job(job)
 
     def assign_cluster(self, cluster):
         self.__output_interfaces = cluster.nodes

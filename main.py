@@ -6,9 +6,9 @@ from wrr import WRRBalancer
 
 from load_balancer import Queue
 
-NUM_JOBS = 10000
-SIM_RUNTIME = 1000
-NUM_NODES = 10
+NUM_JOBS = 3#10000
+SIM_RUNTIME = 1000#1000
+NUM_NODES = 1#10
 
 def run_sim(load_balancer, cluster, jobs):
     load_balancer.assign_cluster(cluster)
@@ -18,12 +18,13 @@ def run_sim(load_balancer, cluster, jobs):
 
     
     for current_time in range(0, SIM_RUNTIME):
-        while(job_queue.front().arrival_time <= current_time):
+        while( (not job_queue.isEmpty()) and (job_queue.front().arrival_time <= current_time)): #do we need to check isEmpty before front()?
             #Add jobs to load balancer as they come in
             load_balancer.add_job(job_queue.dequeue())
             #Distribute those jobs now
             #Use below to start testing algos
             load_balancer.run_load_balancing()
+            cluster.do_work()
 
             #We are gonna need to gather statistics about how the algos performed as well
             #also the algos need to be able to handle busy nodes in the cluster and wait
@@ -50,5 +51,5 @@ if __name__ == "__main__":
     run_sim(WRRBalancer(NUM_NODES), cluster, jobs)
     #run_sim(OverflowLoadBalancer(NUM_NODES), cluster, jobs)
 
-    
-
+    print("metrics: ")
+    cluster.get_cluster_statistics()

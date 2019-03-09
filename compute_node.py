@@ -29,12 +29,51 @@ class ComputeNode(object):
         self.completed_jobs = 0
         self.average_response_time = 0
         self.times_became_overloaded = 0
-        
-    def assign_job(self):
-        self.state = DeviceState.BUSY
+        self.cycles_idle = 0
+
+        self.current_job = None
+        self.progress = 0
     
-    def finish_job(self):
-        self.state = DeviceState.FREE
+    def __str__(self):
+        return "ComputeNode: cpu = " + str(self.device_hardware.cpu) + ", mem = "+str(self.device_hardware.mem)
+
+    def assign_job(self, job):
+        #self.state = DeviceState.BUSY
+        self.log("node was assigned the job: "+str(job))
+        self.job_queue.enqueue(job)
+
+    #def begin_next_job(self, job)
+
+    def finish_job(self, job):
+        #self.state = DeviceState.FREE
+        self.current_job = None
+        self.completed_jobs += 1
+
+    #do work for one unit of time
+    def do_work(self):
+        #no current job: start a job from the queue if there is one, otherwise idle
+        if self.current_job is None: 
+            if self.job_queue.isEmpty():
+                self.idle()
+                return
+            else:
+                self.current_job = self.job_queue.dequeue()
+                self.log("starting job from queue: "+ str(self.current_job))
+                self.progress = 0 #do we need to specify progress toward what job? not if there's only one current job
+        #then work on the job - more cpu means it works faster. ignore mem requirements for now
+        self.progress += self.device_hardware.cpu
+        if (self.progress >= self.current_job.runtime):
+            self.finish_job(current_job)
+
+    def idle():
+        self.log("idle")
+        self.cycles_idle += 1
+
+    #could write to a log for each node. or maybe not necessary if we track everything with class variables
+    def log(self, message):
+        print(message)
+        pass
+
 
 class Cluster(object):
     def __init__(self, node_count, homogenous=True):
@@ -58,6 +97,8 @@ class Cluster(object):
         #example:
         total_completed_jobs = sum([node.completed_jobs for node in self.nodes])
         average_response_time = sum([node.average_response_time for node in self.nodes]) / self.node_count
+        print("total completed jobs: " + str(total_completed_jobs))
+        print("average_response_time: " + str(average_response_time))
 
     def __createNodes(self):
         if self.homogenous:
@@ -76,6 +117,10 @@ class Cluster(object):
                 c = ComputeNode(d)
                 self.nodes.append(c)
             pass
+
+    def do_work(self):
+        for node in self.nodes:
+            node.do_work()
 
 
 
