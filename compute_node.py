@@ -93,6 +93,12 @@ class Cluster(object):
 
         self.__createNodes()
 
+    def get_num_nodes(self):
+        return self.node_count
+
+    def get_node(self, index):
+        return self.nodes[index]
+
     def get_cluster_statistics(self):
         pass
         #Here we can print things like
@@ -103,7 +109,6 @@ class Cluster(object):
         #example:
         print("statistics per node (total nodes = "+str(len(self.nodes))+")")
         for i in range(len(self.nodes)):
-            print(str(i))
             print(str(i)+": "+ self.nodes[i].get_node_statistics())
 
         total_completed_jobs = sum([node.completed_jobs for node in self.nodes])
