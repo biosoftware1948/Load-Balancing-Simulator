@@ -34,19 +34,28 @@ class ComputeNode(object):
 
         self.current_job = None
         self.progress = 0
+
+    def reset_metrics(self):
+        self.completed_jobs = 0
+        self.average_response_time = 0
+        self.times_became_overloaded = 0
+        self.cycles_used = 0
+        self.cycles_idle = 0
+        self.current_job = None
+        self.progress = 0
     
     def __str__(self):
         return "ComputeNode: cpu = " + str(self.device_hardware.cpu) + ", mem = "+str(self.device_hardware.mem)
 
     def assign_job(self, job):
-        #self.state = DeviceState.BUSY
+        self.state = DeviceState.BUSY
         self.log("received the job: "+str(job))
         self.job_queue.enqueue(job)
 
     #def begin_next_job(self, job)
 
     def finish_job(self, job):
-        #self.state = DeviceState.FREE
+        self.state = DeviceState.FREE #should it be free if there are jobs in the queue?
         self.current_job = None
         self.completed_jobs += 1
 
@@ -74,7 +83,7 @@ class ComputeNode(object):
 
     #could write to a log for each node. or maybe not necessary if we track everything with class variables
     def log(self, message):
-        print(message)
+        #print(message)
         pass
 
     def get_node_statistics(self):
@@ -141,5 +150,9 @@ class Cluster(object):
     def __str__(self):
         output = "Cluster: "
         for node in self.nodes:
-            output += str(node)
+            output += "[" + str(node)+"], "
         return output
+
+    def reset_metrics(self):
+        for node in self.nodes:
+            node.reset_metrics()

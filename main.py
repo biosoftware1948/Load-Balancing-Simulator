@@ -48,28 +48,20 @@ if __name__ == "__main__":
     for i, node in enumerate(cluster.nodes):
         print ("Node {0} has state {1}".format(i, node.state))
 
-    
-    # print("run default load balancer")
-    # run_sim(load_balancer.LoadBalancer(NUM_NODES), cluster, jobs)
-    # print("metrics: ")
-    # cluster.get_cluster_statistics()
-
-    print("run random load balancer")
+    print("\nrun random load balancer")
     run_sim(load_balancer.RandomLoadBalancer(NUM_NODES), cluster, jobs)
     print("metrics: ")
     cluster.get_cluster_statistics()
+    cluster.reset_metrics()
 
-    # print("run Weighted Round robin load balancer")
-    # run_sim(WRRBalancer(NUM_NODES), cluster, jobs)
-    # print("metrics: ")
-    # cluster.get_cluster_statistics()
+    print("\nrun Weighted Round robin load balancer")
+    run_sim(WRRBalancer(NUM_NODES), cluster, jobs)
+    print("metrics: ")
+    cluster.get_cluster_statistics()
+    cluster.reset_metrics()
 
-    # print("run Overflow load balancer")
-    # run_sim(OverflowLoadBalancer(NUM_NODES), cluster, jobs)
-    # print("metrics: ")
-    # cluster.get_cluster_statistics()
-
-    #run_sim(load_balancer.RandomLoadBalancer(NUM_NODES), cluster, jobs)
-    #run_sim(WRRBalancer(NUM_NODES), cluster, jobs)
-    #run_sim(OverflowLoadBalancer(NUM_NODES), cluster, jobs)
-    
+    print("\nrun Overflow load balancer")
+    run_sim(OverflowLoadBalancer(NUM_NODES), cluster, jobs)
+    print("metrics: ")
+    cluster.get_cluster_statistics()
+    cluster.reset_metrics() 

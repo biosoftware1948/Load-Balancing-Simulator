@@ -40,11 +40,11 @@ class LoadBalancer(object):
 
 class RandomLoadBalancer(LoadBalancer):
     def run_load_balancing(self):
-        while (True):
-            index = random.randint(0, self.cluster.get_num_nodes()-1)
-            if (not self.JOB_QUEUE.isEmpty()):       
-                job = self.get_next_job()
-                self.assign_job(index, job)
+        #while (True):
+        index = random.randint(0, self.cluster.get_num_nodes()-1)
+        if (not self.JOB_QUEUE.isEmpty()):       
+            job = self.get_next_job()
+            self.assign_job(index, job)
             #cur_node = self.cluster.get_node(index)
             # if cur_node.state == 1:
             #     cur_node.assign_job()
