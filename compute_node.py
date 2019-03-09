@@ -17,7 +17,7 @@ class DeviceState(Enum):
 class DeviceHardware(object):
     def __init__(self, cpu, mem):
         self.cpu = cpu
-        self.__mem = mem
+        self.mem = mem
 
 class ComputeNode(object):
     def __init__(self, device_hardware, attributes = None):
@@ -29,6 +29,7 @@ class ComputeNode(object):
         self.completed_jobs = 0
         self.average_response_time = 0
         self.times_became_overloaded = 0
+        self.cycles_used = 0
         self.cycles_idle = 0
 
         self.current_job = None
@@ -39,7 +40,7 @@ class ComputeNode(object):
 
     def assign_job(self, job):
         #self.state = DeviceState.BUSY
-        self.log("node was assigned the job: "+str(job))
+        self.log("received the job: "+str(job))
         self.job_queue.enqueue(job)
 
     #def begin_next_job(self, job)
@@ -61,11 +62,13 @@ class ComputeNode(object):
                 self.log("starting job from queue: "+ str(self.current_job))
                 self.progress = 0 #do we need to specify progress toward what job? not if there's only one current job
         #then work on the job - more cpu means it works faster. ignore mem requirements for now
+        self.cycles_used += 1
         self.progress += self.device_hardware.cpu
+        self.log("working on job: "+str(self.current_job)+", progress = "+str(self.progress))
         if (self.progress >= self.current_job.runtime):
-            self.finish_job(current_job)
+            self.finish_job(self.current_job)
 
-    def idle():
+    def idle(self):
         self.log("idle")
         self.cycles_idle += 1
 
@@ -73,6 +76,9 @@ class ComputeNode(object):
     def log(self, message):
         print(message)
         pass
+
+    def get_node_statistics(self):
+        return "completed jobs = "+str(self.completed_jobs)+ ", average response time: "+str(self.average_response_time) +", times overloaded: "+ str(self.times_became_overloaded) +", cycles used: " + str(self.cycles_used)+", cycles idle: " + str(self.cycles_idle)
 
 
 class Cluster(object):
@@ -95,6 +101,11 @@ class Cluster(object):
         #Nodes that got overloaded
         #More stats
         #example:
+        print("statistics per node (total nodes = "+str(len(self.nodes))+")")
+        for i in range(len(self.nodes)):
+            print(str(i))
+            print(str(i)+": "+ self.nodes[i].get_node_statistics())
+
         total_completed_jobs = sum([node.completed_jobs for node in self.nodes])
         average_response_time = sum([node.average_response_time for node in self.nodes]) / self.node_count
         print("total completed jobs: " + str(total_completed_jobs))
@@ -122,6 +133,8 @@ class Cluster(object):
         for node in self.nodes:
             node.do_work()
 
-
-
-
+    def __str__(self):
+        output = "Cluster: "
+        for node in self.nodes:
+            output += str(node)
+        return output

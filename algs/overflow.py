@@ -1,22 +1,26 @@
+from load_balancer import LoadBalancer
+from compute_node import ComputeNode
+from compute_node import DeviceHardware
+
 class OverflowLoadBalancer(LoadBalancer):
-    def run_load_balancing():
-        attr = true
-        if not cluster:
+    def run_load_balancing(self):
+        attr = True
+        if not self.cluster:
           print("OverflowLoadBalancer(): failure, no cluster")
           os.flush()
           return true
         if not cluster.nodes:
           print("OverflowLoadBalancer(): failure, no nodes")
           os.flush()
-          return true
+          return True
         if not cluster.nodes[0].attributes:
           print("OverflowLoadBalancer(): failure, no attributes, using node order as priority")
           os.flush()
-          attr = false
+          attr = False
         if not cluster.nodes[0].attributes.priority:
           print("OverflowLoadBalancer(): failure, no priority attributes, using node order as priority")
           os.flush()
-          attr = false
+          attr = False
         
         
         if not attr:
