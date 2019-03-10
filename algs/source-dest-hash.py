@@ -7,23 +7,42 @@
 class S_D_HashLoadBalancer(LoadBalancer):
     def run_load_balancing():
         attr = true
-        if not cluster:
-          print("S_D_HashLoadBalancer(): failure, no cluster")
-          os.flush()
-          return true
-        if not cluster.nodes:
-          print("S_D_HashLoadBalancer(): failure, no nodes")
-          os.flush()
-          return true
-        if not cluster.nodes[0].attributes:
-          print("S_D_HashLoadBalancer(): failure, no attributes, using job number as source-dest (this is not worth doing)")
-          os.flush()
-          attr = false
-        if not cluster.nodes[0].attributes.source_dest:
-          print("S_D_HashLoadBalancer(): failure, no source-dest attributes, using job number as source-dest (this is not worth doing)")
-          os.flush()
-          attr = false
-        
+        #if not cluster:
+        #  print("S_D_HashLoadBalancer(): failure, no cluster")
+        #  os.flush()
+        #  return true
+        try:
+            self.cluster
+        except NameError:
+            print("S_D_HashLoadBalancer(): failure, no cluster")
+            return true
+        #if not cluster.nodes:
+        #  print("S_D_HashLoadBalancer(): failure, no nodes")
+        #  os.flush()
+        #  return true
+        try:
+            self.cluster.nodes
+        except NameError:
+            print("S_D_HashLoadBalancer(): failure, no nodes")
+            return true
+        #if not cluster.nodes[0].attributes:
+        #  print("S_D_HashLoadBalancer(): failure, no attributes, using job number as source-dest (this is not worth doing)")
+        #  os.flush()
+        #  attr = false
+        try:
+            self.cluster.nodes[0].attributes
+        except NameError:
+            print("S_D_HashLoadBalancer(): warn, no attributes, using job number as source-dest (this is not worth doing)")
+            return true
+        #if not cluster.nodes[0].attributes.source_dest:
+        #  print("S_D_HashLoadBalancer(): failure, no source-dest attributes, using job number as source-dest (this is not worth doing)")
+        #  os.flush()
+        #  attr = false
+        try:
+            self.cluster.nodes[0].attributes.source_dest
+        except NameError:
+            print("S_D_HashLoadBalancer(): warn, no source-dest attributes, using job number as source-dest (this is not worth doing)")
+            return true
         
         if not attr:
           print("using the job object IDs as the source-dest attribute is a bit of a waste of time, as they aren't very random")
