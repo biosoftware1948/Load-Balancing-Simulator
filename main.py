@@ -46,18 +46,18 @@ if __name__ == "__main__":
 
     jobs = workload.Jobs()
     jobs.createJobs(config.jobs_config.num_jobs, config.simulation_config.runtime, config.jobs_config.max_runtime, config.jobs_config.max_memory)
-
+    jobs.sortByArrival()
+    
     cluster = compute_node.Cluster(config.cluster_config.num_nodes, config.cluster_config.homogenous) 
     
-    print ("PRINTING JOBS")
-    jobs.sortByArrival()
-    #for job in jobs.jobs:
-        #print ("job arrived at time: {0}, has cpu_load: {1}, mem_requirements: {2}".format(job.arrival_time, job.runtime, job.mem_reqs))
-   
-    print ("\n\nPRINTING NODES:")
-
-    #for i, node in enumerate(cluster.nodes):
-        #print ("Node {0} has state {1}".format(i, node.state))
+    if (config.jobs_config.print_jobs):
+        pretty_box_print("PRINTING JOBS")
+        for job in jobs.jobs:
+            print ("job arrived at time: {0}, has cpu_load: {1}, mem_requirements: {2}".format(job.arrival_time, job.runtime, job.mem_reqs))
+    if(config.cluster_config.print_cluster):
+        pretty_box_print("PRINTING NODES")
+        for i, node in enumerate(cluster.nodes):
+            print ("Node {0} has state {1}".format(i, node.state))
 
 
     for i, algo in enumerate(config.algorithms_config.algorithms):

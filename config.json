@@ -6,12 +6,14 @@
     "jobs_config" : {
         "num_jobs" : 10000,
         "max_runtime" : 100,
-        "max_memory" : 100
+        "max_memory" : 100,
+        "print_jobs" : false
 
     },
     "cluster_config" : {
         "num_nodes" : 10,
         "homogenous" : true,
+        "print_cluster" : false,
         "non_homogenous_config" : [
             {
                 "cpu" : 10,

@@ -40,6 +40,10 @@ class JobsConfig(Config):
     def max_memory(self):
         return self.get_property("jobs_config/max_memory")
 
+    @property
+    def print_jobs(self):
+        return self.get_property("jobs_config/print_jobs")
+
     @max_memory.setter
     def max_memory(self, val):
         self.config["jobs_config"]["max_memory"] = val
@@ -57,6 +61,10 @@ class ClusterConfig(Config):
     @property
     def non_homogenous_config(self):
         return self.get_property("cluster_config/non_homogenous_config")
+
+    @property
+    def print_cluster(self):
+        return self.get_property("cluster_config/print_cluster")
 
 class AlgorithmsConfig(Config):
     @property
