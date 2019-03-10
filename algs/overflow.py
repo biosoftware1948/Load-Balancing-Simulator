@@ -30,7 +30,7 @@ class OverflowLoadBalancer(LoadBalancer):
         try:
             self.cluster.nodes[0].attributes
         except NameError:
-            print("OverflowLoadBalancer(): failure, no attributes, using node order as priority")
+            print("OverflowLoadBalancer(): warn, no attributes, using node order as priority")
             attr = False
         #if not self.cluster.nodes[0].attributes.priority:
         #  print("OverflowLoadBalancer(): failure, no priority attributes, using node order as priority")
@@ -39,7 +39,7 @@ class OverflowLoadBalancer(LoadBalancer):
         try:
             self.cluster.nodes[0].attributes.priority
         except NameError:
-            print("OverflowLoadBalancer(): failure, no priority attributes, using node order as priority")
+            print("OverflowLoadBalancer(): warn, no priority attributes, using node order as priority")
             attr = False        
         
         if not attr:
