@@ -1,10 +1,15 @@
 import load_balancer
 import compute_node
 import workload
-from algs.wrr import WRRBalancer
-from algs.overflow import OverflowLoadBalancer
-from algs.source_dest_hash import S_D_HashLoadBalancer
+#from algs.wrr import WRRBalancer
+#from algs.overflow import OverflowLoadBalancer
+#from algs.source_dest_hash import S_D_HashLoadBalancer
 from load_balancer import Queue
+import lc
+import wrr
+import source_dest_hash
+from Configuration import GlobalConfig
+import sys
 
 NUM_JOBS = 300#10000
 SIM_RUNTIME = 1000#1000
@@ -33,10 +38,13 @@ def run_sim(load_balancer, cluster, jobs):
             #as necessary
 
 if __name__ == "__main__":
-    jobs = workload.Jobs()
-    jobs.createJobs(NUM_JOBS, SIM_RUNTIME)
+    config = GlobalConfig()
 
-    cluster = compute_node.Cluster(NUM_NODES, False) 
+
+    jobs = workload.Jobs()
+    jobs.createJobs(config.jobs_config.num_jobs, config.simulation_config.sim_runtime, config.jobs_config.max_runtime, config.jobs_config.max_memory)
+
+    cluster = compute_node.Cluster(config.cluster_config.num_nodes, config.cluster_config.homogenous) 
     
     print ("PRINTING JOBS")
     jobs.sortByArrival()
@@ -48,26 +56,14 @@ if __name__ == "__main__":
     for i, node in enumerate(cluster.nodes):
         print ("Node {0} has state {1}".format(i, node.state))
 
-    print("\nrun random load balancer")
-    run_sim(load_balancer.RandomLoadBalancer(NUM_NODES), cluster, jobs)
-    print("metrics: ")
-    cluster.get_cluster_statistics()
-    cluster.reset_metrics()
 
-    print("\nrun Weighted Round robin load balancer")
-    run_sim(WRRBalancer(NUM_NODES), cluster, jobs)
-    print("metrics: ")
-    cluster.get_cluster_statistics()
-    cluster.reset_metrics()
+    for algo in config.algorithms_config.algorithms:
+        print "running algorithms: {0}".format(algo["class_name"])
 
-    print("\nrun Overflow load balancer")
-    run_sim(OverflowLoadBalancer(NUM_NODES), cluster, jobs)
-    print("metrics: ")
-    cluster.get_cluster_statistics()
-    cluster.reset_metrics()
-
-    print("\nrun source-dest-hash load balancer")
-    run_sim(S_D_HashLoadBalancer(NUM_NODES), cluster, jobs)
-    print("metrics: ")
-    cluster.get_cluster_statistics()
-    cluster.reset_metrics() 
+        print algo["file_name"]
+        load_balancer_ = getattr(globals()[algo["file_name"]], str(algo["class_name"]))
+        load_balancer_instance = load_balancer_(NUM_NODES)
+        run_sim(load_balancer.RandomLoadBalancer(NUM_NODES), cluster, jobs)
+        print("metrics: ")
+        cluster.get_cluster_statistics()
+        cluster.reset_metrics()

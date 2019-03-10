@@ -23,7 +23,7 @@ class Config(object):
         return val
 
 class SimulationConfig(Config):
-    #@property
+    @property
     def sim_runtime(self):
         return self.get_property("simulation_config/sim_runtime")
 
@@ -39,6 +39,11 @@ class JobsConfig(Config):
     @property
     def max_memory(self):
         return self.get_property("jobs_config/max_memory")
+
+    @max_memory.setter
+    def max_memory(self, val):
+        self.config["jobs_config"]["max_memory"] = val
+
 
 class ClusterConfig(Config):
     @property
@@ -60,10 +65,10 @@ class AlgorithmsConfig(Config):
 
 class GlobalConfig():
     def __init__(self):
-        self.ClusterConfig = ClusterConfig()
-        self.JobsConfig = JobsConfig()
-        self.SimulationConfig = SimulationConfig()
-        self.AlgorithmsConfig = AlgorithmsConfig()
+        self.cluster_config = ClusterConfig()
+        self.jobs_config= JobsConfig()
+        self.simulation_config = SimulationConfig()
+        self.algorithms_config = AlgorithmsConfig()
 
 
 

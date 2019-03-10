@@ -28,11 +28,14 @@
         ]
     },
     "algorithms" : [
-        "lc",
-        "overflow",
-        "random_lb",
-        "round_robin",
-        "source_dest_hash",
-        "wrr"
+        {
+            "file_name" : "wrr",
+            "class_name" : "WRRBalancer"
+        },
+        {
+            "file_name" : "source_dest_hash",
+            "class_name" : "S_D_HashLoadBalancer"
+        }
+
     ]
 }
