@@ -24,7 +24,7 @@ class Config(object):
 
 class SimulationConfig(Config):
     @property
-    def sim_runtime(self):
+    def runtime(self):
         return self.get_property("simulation_config/sim_runtime")
 
 class JobsConfig(Config):

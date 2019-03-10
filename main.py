@@ -11,18 +11,22 @@ import source_dest_hash
 from Configuration import GlobalConfig
 import sys
 
-NUM_JOBS = 300#10000
-SIM_RUNTIME = 1000#1000
-NUM_NODES = 4#10
+def pretty_box_print(name):
+    print_width = 80
+    box = "#" * print_width
+    print "\n" + box
+    algo_string = "running algorithm " + name
+    print "#" + algo_string.center(print_width-2, ' ') + "#"
+    print box + "\n"
 
-def run_sim(load_balancer, cluster, jobs):
+def run_sim(load_balancer, cluster, jobs, runtime):
     load_balancer.assign_cluster(cluster)
     job_queue = Queue()
     for job in jobs.jobs:
         job_queue.enqueue(job)
 
     
-    for current_time in range(0, SIM_RUNTIME):
+    for current_time in range(0, runtime):
         while( (not job_queue.isEmpty()) and (job_queue.front().arrival_time <= current_time)): # need to check isEmpty before front()
             #Add jobs to load balancer as they come in
             load_balancer.add_job(job_queue.dequeue())
@@ -42,28 +46,26 @@ if __name__ == "__main__":
 
 
     jobs = workload.Jobs()
-    jobs.createJobs(config.jobs_config.num_jobs, config.simulation_config.sim_runtime, config.jobs_config.max_runtime, config.jobs_config.max_memory)
+    jobs.createJobs(config.jobs_config.num_jobs, config.simulation_config.runtime, config.jobs_config.max_runtime, config.jobs_config.max_memory)
 
     cluster = compute_node.Cluster(config.cluster_config.num_nodes, config.cluster_config.homogenous) 
     
     print ("PRINTING JOBS")
     jobs.sortByArrival()
-    for job in jobs.jobs:
-        print ("job arrived at time: {0}, has cpu_load: {1}, mem_requirements: {2}".format(job.arrival_time, job.runtime, job.mem_reqs))
+    #for job in jobs.jobs:
+        #print ("job arrived at time: {0}, has cpu_load: {1}, mem_requirements: {2}".format(job.arrival_time, job.runtime, job.mem_reqs))
    
     print ("\n\nPRINTING NODES:")
 
-    for i, node in enumerate(cluster.nodes):
-        print ("Node {0} has state {1}".format(i, node.state))
+    #for i, node in enumerate(cluster.nodes):
+        #print ("Node {0} has state {1}".format(i, node.state))
 
 
-    for algo in config.algorithms_config.algorithms:
-        print "running algorithms: {0}".format(algo["class_name"])
-
-        print algo["file_name"]
+    for i, algo in enumerate(config.algorithms_config.algorithms):
+        pretty_box_print(algo["class_name"])
         load_balancer_ = getattr(globals()[algo["file_name"]], str(algo["class_name"]))
-        load_balancer_instance = load_balancer_(NUM_NODES)
-        run_sim(load_balancer.RandomLoadBalancer(NUM_NODES), cluster, jobs)
+        load_balancer_instance = load_balancer_(config.cluster_config.num_nodes)
+        run_sim(load_balancer_instance, cluster, jobs, config.simulation_config.runtime)
         print("metrics: ")
         cluster.get_cluster_statistics()
         cluster.reset_metrics()
