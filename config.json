@@ -1,0 +1,38 @@
+{
+    "simulation_config" : {
+        "sim_runtime" : 1000
+    },
+
+    "jobs_config" : {
+        "num_jobs" : 10000,
+        "max_runtime" : 100,
+        "max_memory" : 100
+
+    },
+    "cluster_config" : {
+        "num_nodes" : 10,
+        "homogenous" : true,
+        "non_homogenous_config" : [
+            {
+                "cpu" : 10,
+                "mem" : 100
+            },
+            {
+                "cpu" : 1000,
+                "mem" : 10000
+            },
+            {
+                "cpu:" : 350,
+                "mem" : 500
+            }
+        ]
+    },
+    "algorithms" : [
+        "lc",
+        "overflow",
+        "random_lb",
+        "round_robin",
+        "source_dest_hash",
+        "wrr"
+    ]
+}
