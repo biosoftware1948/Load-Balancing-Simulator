@@ -3,7 +3,7 @@ import compute_node
 import workload
 from algs.wrr import WRRBalancer
 from algs.overflow import OverflowLoadBalancer
-
+from algs.source_dest_hash import S_D_HashLoadBalancer
 from load_balancer import Queue
 
 NUM_JOBS = 300#10000
@@ -62,6 +62,12 @@ if __name__ == "__main__":
 
     print("\nrun Overflow load balancer")
     run_sim(OverflowLoadBalancer(NUM_NODES), cluster, jobs)
+    print("metrics: ")
+    cluster.get_cluster_statistics()
+    cluster.reset_metrics()
+
+    print("\nrun source-dest-hash load balancer")
+    run_sim(S_D_HashLoadBalancer(NUM_NODES), cluster, jobs)
     print("metrics: ")
     cluster.get_cluster_statistics()
     cluster.reset_metrics() 

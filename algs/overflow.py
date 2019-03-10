@@ -7,19 +7,19 @@ class OverflowLoadBalancer(LoadBalancer):
         attr = True
         if not self.cluster:
           print("OverflowLoadBalancer(): failure, no cluster")
-          os.flush()
+          #os.flush()
           return true
         if not self.cluster.nodes:
           print("OverflowLoadBalancer(): failure, no nodes")
-          os.flush()
+          #os.flush()
           return True
         if not self.cluster.nodes[0].attributes:
           print("OverflowLoadBalancer(): failure, no attributes, using node order as priority")
-          os.flush()
+          #os.flush()
           attr = False
         if not self.cluster.nodes[0].attributes.priority:
           print("OverflowLoadBalancer(): failure, no priority attributes, using node order as priority")
-          os.flush()
+          #os.flush()
           attr = False
         
         
