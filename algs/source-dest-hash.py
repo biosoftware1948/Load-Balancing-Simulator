@@ -47,11 +47,11 @@ class S_D_HashLoadBalancer(LoadBalancer):
         if not attr:
           print("using the job object IDs as the source-dest attribute is a bit of a waste of time, as they aren't very random")
           os.flush()
-          while not load_balancer.__JOB_QUEUE.empty(): #just modulo the job object IDs onto the node IDs
+          while not load_balancer.__JOB_QUEUE.isEmpty(): #just modulo the job object IDs onto the node IDs
             j = load_balancer.get_next_job()
             cluster.nodes[id(j) % cluster.node_count].assign_job(j)
         else:
           i = 0
-          while not load_balancer.__JOB_QUEUE.empty(): #just modulo the job source_dest attributes onto the node IDs
+          while not load_balancer.__JOB_QUEUE.isEmpty(): #just modulo the job source_dest attributes onto the node IDs
             j = load_balancer.get_next_job()
             cluster.nodes[j.attributes.source_dest % cluster.node_count].assign_job(j)
