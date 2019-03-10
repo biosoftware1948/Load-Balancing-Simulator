@@ -44,7 +44,6 @@ def run_sim(load_balancer, cluster, jobs, runtime):
 if __name__ == "__main__":
     config = GlobalConfig()
 
-
     jobs = workload.Jobs()
     jobs.createJobs(config.jobs_config.num_jobs, config.simulation_config.runtime, config.jobs_config.max_runtime, config.jobs_config.max_memory)
 
@@ -65,7 +64,13 @@ if __name__ == "__main__":
         pretty_box_print(algo["class_name"])
         load_balancer_ = getattr(globals()[algo["file_name"]], str(algo["class_name"]))
         load_balancer_instance = load_balancer_(config.cluster_config.num_nodes)
-        run_sim(load_balancer_instance, cluster, jobs, config.simulation_config.runtime)
-        print("metrics: ")
-        cluster.get_cluster_statistics()
-        cluster.reset_metrics()
+        try:
+            run_sim(load_balancer_instance, cluster, jobs, config.simulation_config.runtime)
+            print("metrics: ")
+            cluster.get_cluster_statistics()
+            cluster.reset_metrics()
+        except:
+            #catch the error with this algo and keep going 
+            #regardless
+            pass
+
