@@ -33,7 +33,7 @@ class LoadBalancer(object):
     def invoke_algorithm():
         self.__algorithm(self.JOB_QUEUE,self.__output_interfaces)
 
-    #@abc.abstractmethod
+    @abc.abstractmethod
     def run_load_balancing(self):
         #This should distribute all the jobs in the job_queue until its empty
         pass
