@@ -77,7 +77,8 @@ class ComputeNode(object):
         self.progress = 0 #do we need to specify progress toward what job? not if there's only one current job
 
     def finish_current_job(self):
-        self.state = DeviceState.FREE #should it be free if there are jobs in the queue?
+        if self.job_queue.isEmpty():
+            self.state = DeviceState.FREE #should it be free if there are jobs in the queue?
         arrival = self.current_job.arrival_time
         self.turnaround_times.append(self.current_time - arrival)
         self.current_job = None
