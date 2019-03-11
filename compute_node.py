@@ -1,6 +1,7 @@
 from enum import Enum
 import random
 from load_balancer import Queue
+import math
 
 DEFAULT_CPU = 1
 DEFAULT_CPU_FLOOR = 1
@@ -9,6 +10,8 @@ DEFAULT_MAX_CPU = 6
 DEFAULT_MEM = 100
 DEFAULT_MEM_FLOOR = 50
 DEFAULT_MEM_CIEL = 150
+
+DEBUG = False
 
 class DeviceState(Enum):
     BUSY = 0
@@ -25,22 +28,18 @@ class ComputeNode(object):
         self.device_hardware = device_hardware
         self.job_queue = Queue()
         self.attributes = attributes
-
-        self.completed_jobs = 0
-        self.average_response_time = 0
-        self.times_became_overloaded = 0
-        self.cycles_used = 0
-        self.cycles_idle = 0
-
-        self.current_job = None
-        self.progress = 0
+        self.reset_metrics()
 
     def reset_metrics(self):
+        #metrics
         self.completed_jobs = 0
         self.average_response_time = 0
         self.times_became_overloaded = 0
         self.cycles_used = 0
         self.cycles_idle = 0
+        self.response_times = []
+        self.turnaround_times = []
+        #current job progress
         self.current_job = None
         self.progress = 0
     
@@ -52,42 +51,64 @@ class ComputeNode(object):
         self.log("received the job: "+str(job))
         self.job_queue.enqueue(job)
 
-    #def begin_next_job(self, job)
-
-    def finish_job(self, job):
-        self.state = DeviceState.FREE #should it be free if there are jobs in the queue?
-        self.current_job = None
-        self.completed_jobs += 1
-
     #do work for one unit of time
-    def do_work(self):
+    def do_work(self, current_time):
+        self.current_time = current_time
         #no current job: start a job from the queue if there is one, otherwise idle
         if self.current_job is None: 
             if self.job_queue.isEmpty():
                 self.idle()
                 return
             else:
-                self.current_job = self.job_queue.dequeue()
-                self.log("starting job from queue: "+ str(self.current_job))
-                self.progress = 0 #do we need to specify progress toward what job? not if there's only one current job
-        #then work on the job - more cpu means it works faster. ignore mem requirements for now
-        self.cycles_used += 1
-        self.progress += self.device_hardware.cpu
-        self.log("working on job: "+str(self.current_job)+", progress = "+str(self.progress))
-        if (self.progress >= self.current_job.runtime):
-            self.finish_job(self.current_job)
+                self.begin_next_job()
+        #then work on the current job, whether or not it was just started
+        self.work_on_current_job()
 
     def idle(self):
         self.log("idle")
         self.cycles_idle += 1
 
+        #begins the job in self.current_job - or should it take job param?
+    def begin_next_job(self):
+        self.current_job = self.job_queue.dequeue()
+        self.log("starting job from queue: "+ str(self.current_job))
+        arrival = self.current_job.arrival_time
+        self.response_times.append(self.current_time - arrival)
+        self.progress = 0 #do we need to specify progress toward what job? not if there's only one current job
+
+    def finish_current_job(self):
+        self.state = DeviceState.FREE #should it be free if there are jobs in the queue?
+        arrival = self.current_job.arrival_time
+        self.turnaround_times.append(self.current_time - arrival)
+        self.current_job = None
+        self.completed_jobs += 1
+
+    def work_on_current_job(self):
+        self.cycles_used += 1
+        self.progress += self.device_hardware.cpu
+        self.log("working on job: "+str(self.current_job)+", progress = "+str(self.progress))
+        if (self.progress >= self.current_job.runtime):
+            self.finish_current_job()
+
     #could write to a log for each node. or maybe not necessary if we track everything with class variables
     def log(self, message):
-        #print(message)
+        if DEBUG:
+            print(message)
         pass
 
     def get_node_statistics(self):
-        return "completed jobs = "+str(self.completed_jobs)+ ", average response time: "+str(self.average_response_time) +", times overloaded: "+ str(self.times_became_overloaded) +", cycles used: " + str(self.cycles_used)+", cycles idle: " + str(self.cycles_idle)
+        average_response_time = math.floor(sum(self.response_times) / len(self.response_times))
+        average_turaround_time = math.floor(sum(self.turnaround_times) / len(self.turnaround_times))
+
+        returnString = "completed jobs = "+str(self.completed_jobs)
+        returnString += ", avg response: "+str(average_response_time)
+        returnString += ", avg turnaround: " + str(average_turaround_time)
+        returnString += ", times overloaded: "+ str(self.times_became_overloaded)
+        returnString += ", cycles used: " + str(self.cycles_used)
+        returnString += ", cycles idle: " + str(self.cycles_idle)
+        #returnString += ", response times: " + str(self.response_times)
+        #returnString += ", turnaround times: " + str(self.turnaround_times)
+        return returnString
 
 
 class Cluster(object):
@@ -96,9 +117,9 @@ class Cluster(object):
         self.homogenous = homogenous
         self.nodes = []
 
-        self.overflowed_nodes = 0
-        self.completed_jobs = 0
-        self.time_to_run_all_jobs = 0
+        # self.overflowed_nodes = 0
+        # self.completed_jobs = 0
+        # self.time_to_run_all_jobs = 0
 
         self.__createNodes()
 
@@ -121,9 +142,14 @@ class Cluster(object):
             print(str(i)+": "+ self.nodes[i].get_node_statistics())
 
         total_completed_jobs = sum([node.completed_jobs for node in self.nodes])
-        average_response_time = sum([node.average_response_time for node in self.nodes]) / self.node_count
-        print("total completed jobs: " + str(total_completed_jobs))
-        print("average_response_time: " + str(average_response_time))
+        
+        #average_response_time = sum([node.average_response_time for node in self.nodes]) / self.node_count
+        #average over jobs instead of nodes
+        average_response_time = sum ([sum(node.response_times) for node in self.nodes]) / sum ([len(node.response_times) for node in self.nodes])
+        average_turnaround_time = sum ([sum(node.turnaround_times) for node in self.nodes]) / sum ([len(node.turnaround_times) for node in self.nodes])
+        print("\ntotal completed jobs: " + str(total_completed_jobs))
+        print("average_response_time: " + str(math.floor(average_response_time)))
+        print("average_turnaround_time: " + str(math.floor(average_turnaround_time)))
 
     def __createNodes(self):
         if self.homogenous:
@@ -143,9 +169,9 @@ class Cluster(object):
                 self.nodes.append(c)
             pass
 
-    def do_work(self):
+    def do_work(self, current_time):
         for node in self.nodes:
-            node.do_work()
+            node.do_work(current_time)
 
     def __str__(self):
         output = "Cluster: "
