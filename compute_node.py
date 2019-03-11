@@ -30,6 +30,9 @@ class ComputeNode(object):
         self.attributes = attributes
         self.reset_metrics()
 
+    def is_free(self):
+        return self.state == FREE
+
     def reset_metrics(self):
         #metrics
         self.completed_jobs = 0
