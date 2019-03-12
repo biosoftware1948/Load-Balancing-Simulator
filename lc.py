@@ -1,15 +1,28 @@
+from load_balancer import LoadBalancer
+from compute_node import ComputeNode
+from compute_node import DeviceHardware
+
 # least connection algorithm
-#   - alg won't work! it assumes every node has a list property, "connections," that keeps track of the current jobs on node
-#   - our current implementation assumes every node has only 1 job, not multiple
+#   - checks to find the first free node that has the best CPU power
+DEBUG = True
 
-# assuming 1 job and entire cluster is sent from load balancer
-def leastConnections(job, cluster):
-    cur_node = cluster.nodes[0]
-    for node in cluster.nodes:
-        if len(node.connections) < len(cur_node.connections):
-            least_connected = node.connections
+class LeastConnectionsBalancer(LoadBalancer):
 
-    cur_node.assignjob()
-    # assign_job makes the node state = busy, but what is keeping track of how long its busy for?
-    # every job has a cycle number, but how will node be aware of that
+    def run_load_balancing(self):
+        while (not self.JOB_QUEUE.isEmpty()):
+            emptyNodes = [i for i in range(self.cluster.get_num_nodes()) if self.cluster.get_node(i).is_free]
+            
+            if len(emptyNodes) == 0:
+                if DEBUG:
+                    print("no nodes available, waiting")
+                return  #no free node - wait for one to be free
+
+            index = emptyNodes[0]
+            for tempIndex in emptyNodes:
+                if self.cluster.get_node(index).device_hardware.cpu < self.cluster.get_node(tempIndex).device_hardware.cpu:
+                    index = tempIndex
+        
+            job = self.get_next_job()
+            self.assign_job(index, job)
+
 
