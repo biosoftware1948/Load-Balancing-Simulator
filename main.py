@@ -11,20 +11,21 @@ import source_dest_hash
 from Configuration import GlobalConfig
 import sys
 
+DEBUG = False
+
 def pretty_box_print(name):
     print_width = 80
     box = "#" * print_width
-    print "\n" + box
+    print ("\n" + box)
     algo_string = "running algorithm " + name
-    print "#" + algo_string.center(print_width-2, ' ') + "#"
-    print box + "\n"
+    print ("#" + algo_string.center(print_width-2, ' ') + "#")
+    print (box + "\n")
 
 def run_sim(load_balancer, cluster, jobs, runtime):
     load_balancer.assign_cluster(cluster)
     job_queue = Queue()
     for job in jobs.jobs:
         job_queue.enqueue(job)
-
     
     for current_time in range(0, runtime):
         while( (not job_queue.isEmpty()) and (job_queue.front().arrival_time <= current_time)): # need to check isEmpty before front()
@@ -33,7 +34,7 @@ def run_sim(load_balancer, cluster, jobs, runtime):
             #Distribute those jobs now
             #Use below to start testing algos
             load_balancer.run_load_balancing() #should this be run only for each added job, or each time step?
-        cluster.do_work()
+        cluster.do_work(current_time)
 
     #do we set it to end when all the work is done? currently runs until SIM_RUNTIME
 
@@ -69,8 +70,9 @@ if __name__ == "__main__":
             print("metrics: ")
             cluster.get_cluster_statistics()
             cluster.reset_metrics()
-        except:
+        except Exception as e:
             #catch the error with this algo and keep going 
             #regardless
+            if DEBUG:
+                raise
             pass
-

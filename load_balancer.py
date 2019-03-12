@@ -1,6 +1,8 @@
 import abc
 import random
 
+DEBUG = True
+
 class LoadBalancer(object):
     def __init__(self, output_interface_count):
         self.__output_interface_count = output_interface_count
@@ -33,24 +35,37 @@ class LoadBalancer(object):
     def invoke_algorithm():
         self.__algorithm(self.JOB_QUEUE,self.__output_interfaces)
 
-    #@abc.abstractmethod
+    @abc.abstractmethod
     def run_load_balancing(self):
         #This should distribute all the jobs in the job_queue until its empty
         pass
 
 class RandomLoadBalancer(LoadBalancer):
     def run_load_balancing(self):
-        #while (True):
-        index = random.randint(0, self.cluster.get_num_nodes()-1)
-        if (not self.JOB_QUEUE.isEmpty()):       
+        while (not self.JOB_QUEUE.isEmpty()):
+            index = random.randint(0, self.cluster.get_num_nodes()-1)      
             job = self.get_next_job()
             self.assign_job(index, job)
+
             #cur_node = self.cluster.get_node(index)
             # if cur_node.state == 1:
             #     cur_node.assign_job()
             #     # assign_job makes the node state = busy, but what is keeping track of how long its busy for?
             #     # every job has a cycle number, but how will node be aware of that
             #     break
+
+#like random, but will not assign to a busy node. if all nodes busy, it will just wait
+class RandomFreeLoadBalancer(LoadBalancer):
+    def run_load_balancing(self):
+        while (not self.JOB_QUEUE.isEmpty()):
+            emptyNodes = [i for i in range(self.cluster.get_num_nodes()) if self.cluster.get_node(i).is_free]
+            if len(emptyNodes) == 0:
+                if DEBUG:
+                    print("no nodes available, waiting")
+                return  #no free node - wait for one to be free
+            index = random.choice(emptyNodes)      
+            job = self.get_next_job()
+            self.assign_job(index, job)
 
 class Queue(object):
     def __init__(self):
