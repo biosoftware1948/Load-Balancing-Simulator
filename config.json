@@ -39,8 +39,12 @@
             "class_name" : "RandomLoadBalancer"
         },
         {
-            "file_name" : "lc",
-            "class_name" : "LeastConnectionsBalancer"
+            "file_name" : "lc_mem",
+            "class_name" : "LeastConnectionsMemBalancer"
+        },
+        {
+            "file_name" : "lc_cpu",
+            "class_name" : "LeastConnectionsCPUBalancer"
         },
         {
             "file_name" : "wrr",

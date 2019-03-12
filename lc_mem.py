@@ -3,10 +3,10 @@ from compute_node import ComputeNode
 from compute_node import DeviceHardware
 
 # least connection algorithm
-#   - checks to find the first free node that has the best CPU power
+#   - checks to find the first free node that has the highest memory capacity
 DEBUG = True
 
-class LeastConnectionsBalancer(LoadBalancer):
+class LeastConnectionsMemBalancer(LoadBalancer):
 
     def run_load_balancing(self):
         while (not self.JOB_QUEUE.isEmpty()):
@@ -19,7 +19,7 @@ class LeastConnectionsBalancer(LoadBalancer):
 
             index = emptyNodes[0]
             for tempIndex in emptyNodes:
-                if self.cluster.get_node(index).device_hardware.cpu < self.cluster.get_node(tempIndex).device_hardware.cpu:
+                if self.cluster.get_node(index).device_hardware.mem < self.cluster.get_node(tempIndex).device_hardware.mem:
                     index = tempIndex
         
             job = self.get_next_job()
