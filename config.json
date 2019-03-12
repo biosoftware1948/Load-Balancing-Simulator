@@ -39,6 +39,10 @@
             "class_name" : "RandomLoadBalancer"
         },
         {
+            "file_name" : "lc",
+            "class_name" : "LeastConnectionsBalancer"
+        },
+        {
             "file_name" : "wrr",
             "class_name" : "WRRBalancer"
         },
