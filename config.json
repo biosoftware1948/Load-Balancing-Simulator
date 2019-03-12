@@ -55,6 +55,10 @@
             "class_name" : "WRRBalancer"
         },
         {
+            "file_name" : "load_balancer",
+            "class_name" : "RoundRobinLoadBalancer"
+        },
+        {
             "file_name" : "source_dest_hash",
             "class_name" : "S_D_HashLoadBalancer"
         }
