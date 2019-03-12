@@ -40,6 +40,10 @@
         },
         {
             "file_name" : "lc",
+            "class_name" : "LeastConnectionsBalancer"
+        },
+        {
+            "file_name" : "lc",
             "class_name" : "LeastConnectionsMemBalancer"
         },
         {

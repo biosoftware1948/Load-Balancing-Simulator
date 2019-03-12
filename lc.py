@@ -6,6 +6,22 @@ from compute_node import DeviceHardware
 #   - checks to find the first free node that has the highest memory capacity
 DEBUG = True
 
+
+class LeastConnectionsBalancer(LoadBalancer):
+
+    def run_load_balancing(self):
+        while (not self.JOB_QUEUE.isEmpty()):
+            emptyNodes = [i for i in range(self.cluster.get_num_nodes()) if self.cluster.get_node(i).is_free]
+            
+            if len(emptyNodes) == 0:
+                if DEBUG:
+                    print("no nodes available, waiting")
+                return  #no free node - wait for one to be free
+
+            index = emptyNodes[0]
+            job = self.get_next_job()
+            self.assign_job(index, job)
+
 class LeastConnectionsMemBalancer(LoadBalancer):
 
     def run_load_balancing(self):
