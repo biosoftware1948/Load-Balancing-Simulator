@@ -69,26 +69,17 @@ class RandomFreeLoadBalancer(LoadBalancer):
             
 class RoundRobinLoadBalancer(LoadBalancer):
 
-    def assign_cluster(self, cluster):
-        max_cycle = 100 #can I make this a constant?
+    def assign_cluster(self, cluster): 
         self.cluster = cluster
         self.__output_interfaces = cluster.nodes
-        self.total = 0
         self.num_nodes = len(self.__output_interfaces)
 
         self.counter = 0
 
     def run_load_balancing(self):
-        while (not self.JOB_QUEUE.isEmpty()):
-            emptyNodes = [i for i in range(self.cluster.get_num_nodes()) if self.cluster.get_node(i).is_free]
-            if len(emptyNodes) == 0:
-                if DEBUG:
-                    print("no nodes available, waiting")
-                return
-
-            curr_node = self.__output_interfaces[self.counter]
-            job = self.get_next_job() 
-            curr_node.assign_job(job)
+        curr_node = self.__output_interfaces[self.counter]
+        job = self.get_next_job()
+        curr_node.assign_job(job)
 
     def increment_counter(self):
         self.counter += 1
