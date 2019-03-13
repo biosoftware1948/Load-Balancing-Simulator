@@ -67,6 +67,27 @@ class RandomFreeLoadBalancer(LoadBalancer):
             job = self.get_next_job()
             self.assign_job(index, job)
 
+#Round Robin Algorithm. Still have to check for busy nodes and assign accordingly          
+class RoundRobinLoadBalancer(LoadBalancer):
+
+    def assign_cluster(self, cluster): 
+        self.cluster = cluster
+        self.__output_interfaces = cluster.nodes
+        self.num_nodes = len(self.__output_interfaces)
+
+        self.counter = 0
+
+    def run_load_balancing(self):
+        curr_node = self.__output_interfaces[self.counter]
+        job = self.get_next_job()
+        curr_node.assign_job(job)
+
+    def increment_counter(self):
+        self.counter += 1
+        if self.counter >= self.num_nodes:
+            self.counter = 0
+
+
 class Queue(object):
     def __init__(self):
         self.items = []
