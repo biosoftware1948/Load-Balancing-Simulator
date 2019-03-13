@@ -35,6 +35,7 @@ class ComputeNode(object):
 
     def reset_metrics(self):
         #metrics
+        self.started_jobs = 0
         self.completed_jobs = 0
         self.average_response_time = 0
         self.times_became_overloaded = 0
@@ -43,6 +44,7 @@ class ComputeNode(object):
         self.response_times = []
         self.turnaround_times = []
         #current job progress
+        self.current_time = -1
         self.current_job = None
         self.progress = 0
     
@@ -74,15 +76,22 @@ class ComputeNode(object):
         #begins the job in self.current_job - or should it take job param?
     def begin_next_job(self):
         self.current_job = self.job_queue.dequeue()
-        self.log("starting job from queue: "+ str(self.current_job))
+        #self.log("starting job from queue: "+ str(self.current_job))
         arrival = self.current_job.arrival_time
-        self.response_times.append(self.current_time - arrival)
+        difference = self.current_time - arrival
+        if DEBUG:
+            print("beginning job in cycle "+str(self.current_time)+ ": arrival time = "+str(arrival)+", current time = "+str(self.current_time) +", difference = "+str(difference)+", state = "+str(self.state))
+        self.response_times.append(difference)
         self.progress = 0 #do we need to specify progress toward what job? not if there's only one current job
+        self.started_jobs += 1
 
     def finish_current_job(self):
         if self.job_queue.isEmpty():
             self.state = DeviceState.FREE #should it be free if there are jobs in the queue?
         arrival = self.current_job.arrival_time
+        difference = self.current_time - arrival
+        if DEBUG:
+            print("finishing job in cycle "+str(self.current_time)+ ": arrival time = "+str(arrival)+", current time = "+str(self.current_time) +", difference = "+str(difference)+", state = "+str(self.state))
         self.turnaround_times.append(self.current_time - arrival)
         self.current_job = None
         self.completed_jobs += 1
@@ -90,7 +99,7 @@ class ComputeNode(object):
     def work_on_current_job(self):
         self.cycles_used += 1
         self.progress += self.device_hardware.cpu
-        self.log("working on job: "+str(self.current_job)+", progress = "+str(self.progress))
+        #self.log("working on job: "+str(self.current_job)+", progress = "+str(self.progress))
         if (self.progress >= self.current_job.runtime):
             self.finish_current_job()
 
@@ -101,17 +110,21 @@ class ComputeNode(object):
         pass
 
     def get_node_statistics(self):
-        average_response_time = math.floor(sum(self.response_times) / len(self.response_times))
-        average_turaround_time = math.floor(sum(self.turnaround_times) / len(self.turnaround_times))
+        average_response_time = "undefined"
+        average_turaround_time = "undefined"
+        if len(self.response_times) > 0:
+            average_response_time = math.floor(sum(self.response_times) / len(self.response_times))
+        if len(self.turnaround_times) > 0:    
+            average_turaround_time = math.floor(sum(self.turnaround_times) / len(self.turnaround_times))
 
         returnString = "completed jobs = "+str(self.completed_jobs)
-        returnString += ", avg response: "+str(average_response_time)
-        returnString += ", avg turnaround: " + str(average_turaround_time)
         returnString += ", times overloaded: "+ str(self.times_became_overloaded)
         returnString += ", cycles used: " + str(self.cycles_used)
         returnString += ", cycles idle: " + str(self.cycles_idle)
-        #returnString += ", response times: " + str(self.response_times)
-        #returnString += ", turnaround times: " + str(self.turnaround_times)
+        returnString += ", response times: " + str(self.response_times)
+        returnString += ", turnaround times: " + str(self.turnaround_times)
+        # returnString += ", avg response: "+str(average_response_time)
+        # returnString += ", avg turnaround: " + str(average_turaround_time)
         return returnString
 
 
@@ -149,11 +162,26 @@ class Cluster(object):
         
         #average_response_time = sum([node.average_response_time for node in self.nodes]) / self.node_count
         #average over jobs instead of nodes
-        average_response_time = sum ([sum(node.response_times) for node in self.nodes]) / sum ([len(node.response_times) for node in self.nodes])
-        average_turnaround_time = sum ([sum(node.turnaround_times) for node in self.nodes]) / sum ([len(node.turnaround_times) for node in self.nodes])
+        
+        average_response_time = "undefined"
+        average_turnaround_time = "undefined"
+
+        sum_started = sum ([len(node.response_times) for node in self.nodes]) #could track these separately in nodes
+        sum_finished = sum ([len(node.turnaround_times) for node in self.nodes])
+        sum_response_time = sum ([sum(node.response_times) for node in self.nodes])
+        sum_turnaround_time = sum ([sum(node.turnaround_times) for node in self.nodes])
+
+        if sum_started > 0:
+            average_response_time = sum_response_time / sum_started
+        if sum_finished > 0:
+            average_turnaround_time = sum_turnaround_time / sum_finished
+        
         print("\ntotal completed jobs: " + str(total_completed_jobs))
+        print("total number of response times recorded: "+str(sum_started))
+        print("total number of turnaround times recorded: "+str(sum_finished))
         print("average_response_time: " + str(math.floor(average_response_time)))
         print("average_turnaround_time: " + str(math.floor(average_turnaround_time)))
+        #print("average_turnaround_time: " + str((average_turnaround_time)))
 
     def __createNodes(self):
         if self.homogenous:
