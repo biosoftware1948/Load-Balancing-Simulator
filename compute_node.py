@@ -23,16 +23,17 @@ class DeviceHardware(object):
         self.mem = mem
 
 class ComputeNode(object):
+
+    #set anything which doesn't need to be reset between algorithms
     def __init__(self, device_hardware, attributes = None):
-        #self.state = DeviceState.FREE
         self.device_hardware = device_hardware
-        #self.job_queue = Queue()
         self.attributes = attributes
         self.reset()
 
     def is_free(self):
         return self.state == FREE
 
+    #reset whatever needs to be reset before running another algorithm - clear all metrics and jobs
     def reset(self):
         #job progress
         self.job_queue = Queue()
@@ -78,7 +79,7 @@ class ComputeNode(object):
             #self.log("idle")
         self.cycles_idle += 1
 
-        #begins the job in self.current_job - or should it take job param?
+        #begins the job in self.current_job
     def begin_next_job(self):
         self.current_job = self.job_queue.dequeue()
         #self.log("starting job from queue: "+ str(self.current_job))
@@ -91,8 +92,8 @@ class ComputeNode(object):
         self.started_jobs += 1
 
     def finish_current_job(self):
-        if self.job_queue.isEmpty():
-            self.state = DeviceState.FREE #should it be free if there are jobs in the queue?
+        if self.job_queue.isEmpty(): #it's only free if there are no more jobs in the queue
+            self.state = DeviceState.FREE 
         arrival = self.current_job.arrival_time
         difference = self.current_time - arrival
         if DEBUG:
@@ -185,9 +186,8 @@ class Cluster(object):
         print("\ntotal completed jobs: " + str(total_completed_jobs))
         print("total number of response times recorded: "+str(sum_started))
         print("total number of turnaround times recorded: "+str(sum_finished))
-        print("average_response_time: " + str(math.floor(average_response_time)))
-        print("average_turnaround_time: " + str(math.floor(average_turnaround_time)))
-        #print("average_turnaround_time: " + str((average_turnaround_time)))
+        print("average_response_time: " + str(round(average_response_time, 2)))
+        print("average_turnaround_time: " + str(round(average_turnaround_time, 2)))
 
     def __createNodes(self):
         if self.homogenous:
