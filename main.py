@@ -11,7 +11,7 @@ import source_dest_hash
 from Configuration import GlobalConfig
 import sys
 
-DEBUG = False
+DEBUG = True
 
 def pretty_box_print(name):
     print_width = 80
@@ -69,7 +69,7 @@ if __name__ == "__main__":
             run_sim(load_balancer_instance, cluster, jobs, config.simulation_config.runtime)
             print("metrics: ")
             cluster.get_cluster_statistics()
-            cluster.reset_metrics()
+            cluster.reset()
         except Exception as e:
             #catch the error with this algo and keep going 
             #regardless

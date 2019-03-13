@@ -3,11 +3,14 @@ from load_balancer import LoadBalancer
 from compute_node import ComputeNode
 from compute_node import DeviceHardware
 
+MAX_CYCLE = 100
+CARE_IF_BUSY = True
+
 class WRRBalancer(LoadBalancer):
 
     #set the ratio when we get the clusters, according to cpu
     def assign_cluster(self, cluster):
-        max_cycle = 100 #can I make this a constant?
+         #can I make this a constant?
         self.cluster = cluster
         self.__output_interfaces = cluster.nodes
         self.total = 0
@@ -19,11 +22,11 @@ class WRRBalancer(LoadBalancer):
             self.weights.append(cpu)
 
         #scale the maximum cycle size to maximum total cycles
-        if (self.total >= max_cycle):
+        if (self.total >= MAX_CYCLE):
             print("adjusting down to max cycles")
             for i in range(len(self.weights)):
-                self.weights[i] = self.weights[i] * (self.total / max_cycle)
-            self.total = max_cycle
+                self.weights[i] = self.weights[i] * (self.total / MAX_CYCLE)
+            self.total = MAX_CYCLE
 
         self.small_counter = 0
         self.large_counter = 0
