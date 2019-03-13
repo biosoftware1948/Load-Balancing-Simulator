@@ -24,16 +24,23 @@ class DeviceHardware(object):
 
 class ComputeNode(object):
     def __init__(self, device_hardware, attributes = None):
-        self.state = DeviceState.FREE
+        #self.state = DeviceState.FREE
         self.device_hardware = device_hardware
-        self.job_queue = Queue()
+        #self.job_queue = Queue()
         self.attributes = attributes
-        self.reset_metrics()
+        self.reset()
 
     def is_free(self):
         return self.state == FREE
 
-    def reset_metrics(self):
+    def reset(self):
+        #job progress
+        self.job_queue = Queue()
+        self.state = DeviceState.FREE
+        self.current_time = -1
+        self.current_job = None
+        self.progress = 0
+
         #metrics
         self.started_jobs = 0
         self.completed_jobs = 0
@@ -43,10 +50,7 @@ class ComputeNode(object):
         self.cycles_idle = 0
         self.response_times = []
         self.turnaround_times = []
-        #current job progress
-        self.current_time = -1
-        self.current_job = None
-        self.progress = 0
+        
     
     def __str__(self):
         return "ComputeNode: cpu = " + str(self.device_hardware.cpu) + ", mem = "+str(self.device_hardware.mem)
@@ -70,7 +74,8 @@ class ComputeNode(object):
         self.work_on_current_job()
 
     def idle(self):
-        self.log("idle")
+        #if DEBUG:
+            #self.log("idle")
         self.cycles_idle += 1
 
         #begins the job in self.current_job - or should it take job param?
@@ -121,10 +126,11 @@ class ComputeNode(object):
         returnString += ", times overloaded: "+ str(self.times_became_overloaded)
         returnString += ", cycles used: " + str(self.cycles_used)
         returnString += ", cycles idle: " + str(self.cycles_idle)
-        returnString += ", response times: " + str(self.response_times)
-        returnString += ", turnaround times: " + str(self.turnaround_times)
-        # returnString += ", avg response: "+str(average_response_time)
-        # returnString += ", avg turnaround: " + str(average_turaround_time)
+        if DEBUG:
+            returnString += ", response times: " + str(self.response_times)
+            returnString += ", turnaround times: " + str(self.turnaround_times)
+        returnString += ", avg response: "+str(average_response_time)
+        returnString += ", avg turnaround: " + str(average_turaround_time)
         return returnString
 
 
@@ -211,6 +217,6 @@ class Cluster(object):
             output += "[" + str(node)+"], "
         return output
 
-    def reset_metrics(self):
+    def reset(self):
         for node in self.nodes:
-            node.reset_metrics()
+            node.reset()
