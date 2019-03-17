@@ -50,6 +50,23 @@ if __name__ == "__main__":
     jobs.sortByArrival()
     
     cluster = compute_node.Cluster(config.cluster_config.num_nodes, config.cluster_config.homogenous) 
+
+
+# self.cluster_config = ClusterConfig()
+#         self.jobs_config= JobsConfig()
+#         self.simulation_config = SimulationConfig()
+#         self.algorithms_config =
+    print("\n_____CLUSTER CONFIG:_____")
+    config.jobs_config.print_properties()
+
+    print("\n_____JOBS CONFIG:_____")
+    config.jobs_config.print_properties()
+
+    print("\n_____SIMULATION CONFIG:_____")
+    config.simulation_config.print_properties()
+
+    print("\n_____ALGORITHMS CONFIG:_____")
+    config.algorithms_config.print_properties()
     
     if (config.jobs_config.print_jobs):
         pretty_box_print("PRINTING JOBS")
@@ -59,7 +76,6 @@ if __name__ == "__main__":
         pretty_box_print("PRINTING NODES")
         for i, node in enumerate(cluster.nodes):
             print ("Node {0} has state {1}".format(i, node.state))
-
 
     for i, algo in enumerate(config.algorithms_config.algorithms):
         pretty_box_print(algo["class_name"])
