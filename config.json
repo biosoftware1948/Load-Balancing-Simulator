@@ -41,7 +41,16 @@
         {
             "file_name" : "load_balancer",
             "class_name" : "RandomLoadBalancer"
+        },
+        {
+            "file_name" : "load_balancer",
+            "class_name" : "RandomFreeLoadBalancer"
+        },
+        {
+            "file_name" : "load_balancer",
+            "class_name" : "RoundRobinLoadBalancer"
         }
+
 
     ]
 }

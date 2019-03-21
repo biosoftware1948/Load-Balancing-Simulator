@@ -11,7 +11,7 @@ import source_dest_hash
 from Configuration import GlobalConfig
 import sys
 
-DEBUG = True
+DEBUG = False
 
 def pretty_box_print(name):
     print_width = 80
@@ -50,6 +50,23 @@ if __name__ == "__main__":
     jobs.sortByArrival()
     
     cluster = compute_node.Cluster(config.cluster_config.num_nodes, config.cluster_config.homogenous) 
+
+
+# self.cluster_config = ClusterConfig()
+#         self.jobs_config= JobsConfig()
+#         self.simulation_config = SimulationConfig()
+#         self.algorithms_config =
+    print("\n_____CLUSTER CONFIG:_____")
+    config.jobs_config.print_properties()
+
+    print("\n_____JOBS CONFIG:_____")
+    config.jobs_config.print_properties()
+
+    print("\n_____SIMULATION CONFIG:_____")
+    config.simulation_config.print_properties()
+
+    print("\n_____ALGORITHMS CONFIG:_____")
+    config.algorithms_config.print_properties()
     
     if (config.jobs_config.print_jobs):
         pretty_box_print("PRINTING JOBS")
@@ -60,7 +77,6 @@ if __name__ == "__main__":
         for i, node in enumerate(cluster.nodes):
             print ("Node {0} has state {1}".format(i, node.state))
 
-
     for i, algo in enumerate(config.algorithms_config.algorithms):
         pretty_box_print(algo["class_name"])
         load_balancer_ = getattr(globals()[algo["file_name"]], str(algo["class_name"]))
@@ -69,7 +85,7 @@ if __name__ == "__main__":
             run_sim(load_balancer_instance, cluster, jobs, config.simulation_config.runtime)
             print("metrics: ")
             cluster.get_cluster_statistics()
-            cluster.reset()
+            cluster.reset_metrics()
         except Exception as e:
             #catch the error with this algo and keep going 
             #regardless
