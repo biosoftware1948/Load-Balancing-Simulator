@@ -3,7 +3,7 @@ import random
 from load_balancer import Queue
 import math
 
-DEFAULT_CPU = 1
+DEFAULT_CPU = 3
 DEFAULT_CPU_FLOOR = 1
 DEFAULT_MAX_CPU = 6
 
@@ -181,12 +181,18 @@ class Cluster(object):
             average_response_time = sum_response_time / sum_started
         if sum_finished > 0:
             average_turnaround_time = sum_turnaround_time / sum_finished
+
+        average_cycles_used = sum([node.cycles_used for node in self.nodes])/len(self.nodes)
+        average_cycles_idle = sum([node.cycles_idle for node in self.nodes])/len(self.nodes)
+        utilization = average_cycles_used / (average_cycles_used + average_cycles_idle )
         
         print("\ntotal completed jobs: " + str(total_completed_jobs))
-        print("total number of response times recorded: "+str(sum_started))
-        print("total number of turnaround times recorded: "+str(sum_finished))
+        if DEBUG:
+            print("total number of response times recorded: "+str(sum_started))
+            print("total number of turnaround times recorded: "+str(sum_finished))
         print("average_response_time: " + str(round(average_response_time, 2)))
         print("average_turnaround_time: " + str(round(average_turnaround_time, 2)))
+        print("average utilization of nodes: "+str(round(utilization,2)))
 
     def __createNodes(self):
         if self.homogenous:

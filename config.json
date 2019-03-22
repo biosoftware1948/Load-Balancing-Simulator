@@ -1,10 +1,10 @@
 {
     "simulation_config" : {
-        "sim_runtime" : 1000
+        "sim_runtime" : 20000
     },
 
     "jobs_config" : {
-        "num_jobs" : 10000,
+        "num_jobs" : 5000,
         "max_runtime" : 100,
         "max_memory" : 100,
         "print_jobs" : false
