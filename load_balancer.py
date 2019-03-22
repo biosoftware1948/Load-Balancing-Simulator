@@ -81,6 +81,7 @@ class RoundRobinLoadBalancer(LoadBalancer):
         curr_node = self.__output_interfaces[self.counter]
         job = self.get_next_job()
         curr_node.assign_job(job)
+        self.increment_counter()
 
     def increment_counter(self):
         self.counter += 1
