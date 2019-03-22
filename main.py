@@ -57,7 +57,7 @@ if __name__ == "__main__":
 #         self.simulation_config = SimulationConfig()
 #         self.algorithms_config =
     print("\n_____CLUSTER CONFIG:_____")
-    config.jobs_config.print_properties()
+    config.cluster_config.print_properties()
 
     print("\n_____JOBS CONFIG:_____")
     config.jobs_config.print_properties()
@@ -85,7 +85,7 @@ if __name__ == "__main__":
             run_sim(load_balancer_instance, cluster, jobs, config.simulation_config.runtime)
             print("metrics: ")
             cluster.get_cluster_statistics()
-            cluster.reset_metrics()
+            cluster.reset()
         except Exception as e:
             #catch the error with this algo and keep going 
             #regardless
