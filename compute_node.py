@@ -31,7 +31,7 @@ class ComputeNode(object):
         self.reset()
 
     def is_free(self):
-        return self.state == FREE
+        return self.state == DeviceState.FREE
 
     #reset whatever needs to be reset before running another algorithm - clear all metrics and jobs
     def reset(self):
@@ -140,15 +140,14 @@ class Cluster(object):
         self.node_count = node_count
         self.homogenous = homogenous
         self.nodes = []
-
-        # self.overflowed_nodes = 0
-        # self.completed_jobs = 0
-        # self.time_to_run_all_jobs = 0
-
         self.__createNodes()
 
     def get_num_nodes(self):
         return self.node_count
+
+    def print_nodes(self):
+        for node in self.nodes:
+            print(node)
 
     def get_node(self, index):
         return self.nodes[index]
@@ -205,6 +204,8 @@ class Cluster(object):
                 d = DeviceHardware(cpu, mem)
                 c = ComputeNode(d)
                 self.nodes.append(c)
+
+
             pass
 
     def do_work(self, current_time):

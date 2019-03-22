@@ -1,7 +1,7 @@
 import abc
 import random
 
-DEBUG = True
+DEBUG = False
 
 class LoadBalancer(object):
     def __init__(self, output_interface_count):
@@ -58,7 +58,7 @@ class RandomLoadBalancer(LoadBalancer):
 class RandomFreeLoadBalancer(LoadBalancer):
     def run_load_balancing(self):
         while (not self.JOB_QUEUE.isEmpty()):
-            emptyNodes = [i for i in range(self.cluster.get_num_nodes()) if self.cluster.get_node(i).is_free]
+            emptyNodes = [i for i in range(self.cluster.get_num_nodes()) if self.cluster.get_node(i).is_free()]
             if len(emptyNodes) == 0:
                 if DEBUG:
                     print("no nodes available, waiting")

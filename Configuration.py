@@ -65,6 +65,10 @@ class ClusterConfig(Config):
         return self.get_property("cluster_config/homogenous")
 
     @property
+    def config_type(self):  #name for a specific pre-written config to use
+        return self.get_property("cluster_config/config_type")
+
+    @property
     def non_homogenous_config(self):
         return self.get_property("cluster_config/non_homogenous_config")
 
@@ -73,7 +77,7 @@ class ClusterConfig(Config):
         return self.get_property("cluster_config/print_cluster")
 
     def print_properties(self):
-        print("num_nodes"+str(self.num_nodes))
+        print("num_nodes: "+str(self.num_nodes)+", homogenous: "+str(self.homogenous))
 
 class AlgorithmsConfig(Config):
     @property

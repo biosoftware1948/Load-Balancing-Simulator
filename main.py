@@ -58,6 +58,7 @@ if __name__ == "__main__":
 #         self.algorithms_config =
     print("\n_____CLUSTER CONFIG:_____")
     config.cluster_config.print_properties()
+    cluster.print_nodes()
 
     print("\n_____JOBS CONFIG:_____")
     config.jobs_config.print_properties()

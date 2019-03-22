@@ -12,7 +12,7 @@
     },
     "cluster_config" : {
         "num_nodes" : 10,
-        "homogenous" : true,
+        "homogenous" : false,
         "print_cluster" : false,
         "non_homogenous_config" : [
             {
@@ -30,14 +30,7 @@
         ]
     },
     "algorithms" : [
-        {
-            "file_name" : "wrr",
-            "class_name" : "WRRBalancer"
-        },
-        {
-            "file_name" : "source_dest_hash",
-            "class_name" : "S_D_HashLoadBalancer"
-        },
+        
         {
             "file_name" : "load_balancer",
             "class_name" : "RandomLoadBalancer"
@@ -49,8 +42,27 @@
         {
             "file_name" : "load_balancer",
             "class_name" : "RoundRobinLoadBalancer"
-        }
-
-
+        },
+        {
+            "file_name" : "wrr",
+            "class_name" : "WRRBalancer"
+        },
+       
+        {
+            "file_name" : "lc",
+            "class_name" : "LeastConnectionsBalancer"
+        },
+        {
+            "file_name" : "lc",
+            "class_name" : "LeastConnectionsCPUBalancer"
+        },
+        {
+            "file_name" : "lc",
+            "class_name" : "LeastConnectionsMemBalancer"
+        },
+        {
+            "file_name" : "source_dest_hash",
+            "class_name" : "S_D_HashLoadBalancer"
+        }        
     ]
 }
